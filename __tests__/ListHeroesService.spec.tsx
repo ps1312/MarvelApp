@@ -4,7 +4,10 @@ const listHeroesService = async (url: string): Promise<Hero[]> => {
   try {
     const result = await fetch(url);
     const json = await result.json();
-    return json.data.results.map(() => ({}));
+    return json.data.results.map((item: any) => ({
+      id: item.id,
+      name: item.name,
+    }));
   } catch (error) {
     throw new Error();
   }
@@ -42,6 +45,19 @@ describe('listHeroesService()', () => {
     const result = await listHeroesService(url);
     expect(result.length).toEqual(0);
   });
+
+  test('returns heroes list when fetch succeeds', async () => {
+    const hero1 = {id: 1, name: 'any name'};
+    const hero2 = {id: 2, name: 'another name'};
+
+    global.fetch = mockValidFetchResponse([hero1, hero2]);
+
+    const url = 'https://any-url.com';
+    const result = await listHeroesService(url);
+    expect(result.length).toEqual(2);
+    expect(result[0]).toStrictEqual(hero1);
+    expect(result[1]).toStrictEqual(hero2);
+  });
 });
 
 const mockRejectedFetch = () => jest.fn().mockRejectedValueOnce('');
@@ -53,10 +69,10 @@ const mockInvalidFetchResponse = () =>
     });
   });
 
-const mockValidFetchResponse = () =>
+const mockValidFetchResponse = (results: Hero[] = []) =>
   jest.fn().mockImplementationOnce(() => {
     return new Promise((resolve, _) => {
-      resolve({json: () => ({data: {results: []}})});
+      resolve({json: () => ({data: {results}})});
     });
   });
 
