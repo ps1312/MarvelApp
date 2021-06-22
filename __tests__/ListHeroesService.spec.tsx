@@ -1,17 +1,17 @@
-import md5 from 'md5';
+global.fetch = jest.fn();
 
-jest.mock('md5', () => jest.fn());
-
-const listHeroesService = (credential: string) => {
-  md5(credential);
+const listHeroesService = (url: string) => {
+  fetch(url);
 };
 
 describe('', () => {
-  test('calls to md5 hash with provided credential', () => {
-    const anyCredential = 'any';
-    listHeroesService(anyCredential);
+  test('make request with provided url', () => {
+    const url = 'https://any-url.com';
+    listHeroesService(url);
 
-    expect(md5).toHaveBeenCalledTimes(1);
-    expect(md5).toHaveBeenLastCalledWith(anyCredential);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenLastCalledWith(url);
   });
 });
+
+export {};
