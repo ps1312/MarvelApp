@@ -1,7 +1,11 @@
 global.fetch = jest.fn();
 
-const listHeroesService = (url: string) => {
-  fetch(url);
+const listHeroesService = async (url: string) => {
+  try {
+    await fetch(url);
+  } catch {
+    throw new Error();
+  }
 };
 
 describe('', () => {
@@ -11,6 +15,13 @@ describe('', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenLastCalledWith(url);
+  });
+
+  test('throws error when fetch fails', async () => {
+    global.fetch = jest.fn().mockRejectedValueOnce('');
+
+    const url = 'https://any-url.com';
+    await expect(listHeroesService(url)).rejects.toThrow();
   });
 });
 
