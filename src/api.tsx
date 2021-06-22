@@ -15,7 +15,7 @@ const listHeroesService = async (url: string): Promise<Hero[]> => {
 };
 
 function isHero(item: any): item is Hero {
-  return (item as Hero).id !== undefined;
+  return (item as Hero).id !== undefined && (item as Hero).name !== undefined;
 }
 
 export type Hero = {

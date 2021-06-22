@@ -34,10 +34,16 @@ describe('listHeroesService()', () => {
   });
 
   test('throws error when fetch returns invalid heroes', async () => {
-    const hero1 = {invalid: 'hero'};
-
+    const hero1 = {};
     global.fetch = mockValidFetchResponse([hero1]);
+    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
 
+    const hero2 = {id: 123};
+    global.fetch = mockValidFetchResponse([hero2]);
+    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
+
+    const hero3 = {name: 'name'};
+    global.fetch = mockValidFetchResponse([hero3]);
     await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
   });
 
