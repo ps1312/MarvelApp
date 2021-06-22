@@ -3,27 +3,41 @@ const listCharactersService = async (url: string): Promise<Character[]> => {
     const result = await fetch(url);
     const json = await result.json();
     return json.data.results.map((item: any) => {
-      if (!isCharacter(item)) {
+      if (!isApiCharacter(item)) {
         throw new Error();
       }
 
-      return {id: item.id, name: item.name};
+      const imagePath = `${item.thumbnail.path}/portrait_small.${item.thumbnail.extension}`;
+      return {id: item.id, name: item.name, thumbUrl: imagePath};
     });
   } catch (error) {
     throw new Error();
   }
 };
 
-function isCharacter(item: any): item is Character {
+function isApiCharacter(item: any): item is ApiCharacter {
   return (
-    (item as Character).id !== undefined &&
-    (item as Character).name !== undefined
+    (item as ApiCharacter).id !== undefined &&
+    (item as ApiCharacter).name !== undefined &&
+    (item as ApiCharacter).thumbnail !== undefined
   );
 }
+
+export type CharacterThumbnail = {
+  path: string;
+  extension: string;
+};
+
+export type ApiCharacter = {
+  id: number;
+  name: string;
+  thumbnail: CharacterThumbnail;
+};
 
 export type Character = {
   id: number;
   name: string;
+  thumbUrl: string;
 };
 
 export default listCharactersService;

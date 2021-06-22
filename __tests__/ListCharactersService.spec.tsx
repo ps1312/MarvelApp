@@ -1,4 +1,4 @@
-import listCharactersService, {Character} from '../src/api';
+import listCharactersService, {ApiCharacter, Character} from '../src/api';
 
 describe('listCharactersService()', () => {
   test('make request with provided url', () => {
@@ -54,16 +54,22 @@ describe('listCharactersService()', () => {
   });
 
   test('returns heroes list when fetch succeeds', async () => {
-    const character1: Character = {id: 1, name: 'any name'};
-    const character2: Character = {id: 2, name: 'another name'};
+    const [apiCharacter1, expectedCharacter1] = makeCharacter();
+    const [apiCharacter2, expectedCharacter2] = makeCharacter(
+      2,
+      'another name',
+      'http://another-path.com',
+      'png',
+    );
 
-    global.fetch = mockValidFetchResponse([character1, character2]);
+    global.fetch = mockValidFetchResponse([apiCharacter1, apiCharacter2]);
 
     const url = 'https://any-url.com';
     const result = await listCharactersService(url);
     expect(result.length).toEqual(2);
-    expect(result[0]).toStrictEqual(character1);
-    expect(result[1]).toStrictEqual(character2);
+
+    expect(result[0]).toStrictEqual(expectedCharacter1);
+    expect(result[1]).toStrictEqual(expectedCharacter2);
   });
 });
 
@@ -83,4 +89,22 @@ const mockValidFetchResponse = (results: any[] = []) =>
     });
   });
 
-export {};
+const makeCharacter = (
+  id: number = Math.floor(Math.random() * 10),
+  name: string = 'name',
+  path: string = 'any-path.com',
+  extension: string = 'jpg',
+): [ApiCharacter, Character] => {
+  const apiCharacter: ApiCharacter = {
+    id,
+    name,
+    thumbnail: {path, extension},
+  };
+  const expectedCharacter: Character = {
+    id,
+    name,
+    thumbUrl: `${path}/portrait_small.${extension}`,
+  };
+
+  return [apiCharacter, expectedCharacter];
+};
