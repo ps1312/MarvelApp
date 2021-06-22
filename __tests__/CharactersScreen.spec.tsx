@@ -12,31 +12,50 @@ const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));
 
 describe('CharactersScreen.tsx', () => {
-  test('should make request to characters and display a loading indicator on init', async () => {
-    const listCharactersService = jest.fn().mockRejectedValue(new Error());
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('displays a loading indicator on init', async () => {
+    const {getByTestId} = makeCharactersScreen();
+
+    expect(getByTestId('activityIndicator')).not.toBeNull();
+
+    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
+  });
+
+  test('calls md5 with correct params', async () => {
     const timestamp = () => 9999999999999;
     const publicKey = 'public marvel key';
     const privateKey = 'private marvel key';
-    const baseUrl = 'http://any-url.com/';
 
-    const {getByTestId} = render(
-      <CharactersScreen
-        listCharactersService={listCharactersService}
-        timestamp={timestamp}
-        publicKey={publicKey}
-        privateKey={privateKey}
-        baseUrl={baseUrl}
-      />,
-    );
-    expect(getByTestId('activityIndicator')).not.toBeNull();
+    const {getByTestId} = makeCharactersScreen();
 
     expect(md5).toHaveBeenCalledTimes(1);
     expect(md5).toHaveBeenCalledWith(timestamp() + publicKey + privateKey);
 
+    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
+  });
+
+  test('should make request to characters with correct url', async () => {
+    const timestamp = () => 111111111;
+    const publicKey = 'public marvel key';
+    const baseUrl = 'http://another-url.com/';
+    const serviceSpy = jest.fn().mockRejectedValue(new Error());
+
+    const {getByTestId} = makeCharactersScreen(
+      serviceSpy,
+      timestamp,
+      publicKey,
+      'private key',
+      baseUrl,
+    );
+
     const expectedUrl =
       baseUrl + `?ts=${timestamp()}&apikey=${publicKey}&hash=${md5MockedValue}`;
-    expect(listCharactersService).toHaveBeenCalledTimes(1);
-    expect(listCharactersService).toHaveBeenCalledWith(expectedUrl);
+
+    expect(serviceSpy).toHaveBeenCalledTimes(1);
+    expect(serviceSpy).toHaveBeenCalledWith(expectedUrl);
 
     await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
   });
@@ -63,12 +82,11 @@ describe('CharactersScreen.tsx', () => {
 
 const makeCharactersScreen = (
   listCharactersService = jest.fn().mockRejectedValue(new Error()),
+  timestamp = () => 9999999999999,
+  publicKey = 'public marvel key',
+  privateKey = 'private marvel key',
+  baseUrl = 'http://any-url.com/',
 ) => {
-  const timestamp = () => 9999999999999;
-  const publicKey = 'public marvel key';
-  const privateKey = 'private marvel key';
-  const baseUrl = 'http://any-url.com/';
-
   return render(
     <CharactersScreen
       listCharactersService={listCharactersService}
