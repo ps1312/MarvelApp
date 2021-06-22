@@ -25,14 +25,14 @@ describe('CharactersScreen.tsx', () => {
   });
 
   test('calls md5 when fetching for characters', async () => {
-    const timestamp = () => 9999999999999;
+    const timestamp = 9999999999999;
     const publicKey = 'public marvel key';
     const privateKey = 'private marvel key';
 
     const {getByText} = makeCharactersScreen();
 
     expect(md5).toHaveBeenCalledTimes(1);
-    expect(md5).toHaveBeenCalledWith(timestamp() + publicKey + privateKey);
+    expect(md5).toHaveBeenCalledWith(timestamp + privateKey + publicKey);
 
     await waitFor(() => {
       const retryButton = getByText('Tentar novamente');
@@ -43,7 +43,7 @@ describe('CharactersScreen.tsx', () => {
   });
 
   test('should make request to characters with correct url', async () => {
-    const timestamp = () => 111111111;
+    const timestamp = 111111111;
     const publicKey = 'public marvel key';
     const baseUrl = 'http://another-url.com/';
     const serviceSpy = jest.fn().mockRejectedValue(new Error());
@@ -57,7 +57,7 @@ describe('CharactersScreen.tsx', () => {
     );
 
     const expectedUrl =
-      baseUrl + `?ts=${timestamp()}&apikey=${publicKey}&hash=${md5MockedValue}`;
+      baseUrl + `?ts=${timestamp}&apikey=${publicKey}&hash=${md5MockedValue}`;
 
     expect(serviceSpy).toHaveBeenCalledTimes(1);
     expect(serviceSpy).toHaveBeenCalledWith(expectedUrl);
@@ -87,7 +87,7 @@ describe('CharactersScreen.tsx', () => {
 
 const makeCharactersScreen = (
   listCharactersService = jest.fn().mockRejectedValue(new Error()),
-  timestamp = () => 9999999999999,
+  timestamp = 9999999999999,
   publicKey = 'public marvel key',
   privateKey = 'private marvel key',
   baseUrl = 'http://any-url.com/',

@@ -5,7 +5,7 @@ import {Character} from './api';
 
 type Props = {
   listCharactersService: (url: string) => Promise<Character[]>;
-  timestamp: () => number;
+  timestamp: number;
   publicKey: string;
   privateKey: string;
   baseUrl: string;
@@ -22,10 +22,10 @@ const CharactersScreen = ({
 
   const fetchCharacters = useCallback(async () => {
     setLoading(true);
-    const hash = md5(timestamp() + publicKey + privateKey);
+    const hash = md5(timestamp + privateKey + publicKey);
 
     try {
-      const queryParams = `?ts=${timestamp()}&apikey=${publicKey}&hash=${hash}`;
+      const queryParams = `?ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
       const url = baseUrl + queryParams;
       await listCharactersService(url);
     } catch {}
