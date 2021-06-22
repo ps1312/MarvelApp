@@ -85,16 +85,29 @@ describe('CharactersScreen.tsx', () => {
     });
   });
 
-  test('should display characters names when service succeeds', async () => {
-    const character1: Character = {id: 1, name: 'any name'};
-    const character2: Character = {id: 2, name: 'another name'};
+  test('should display characters names and thumbnails when service succeeds', async () => {
+    const character1: Character = {
+      id: 1,
+      name: 'any name',
+      thumbUrl: 'any-thumburl.com',
+    };
+    const character2: Character = {
+      id: 2,
+      name: 'another name',
+      thumbUrl: 'another-thumburl.com',
+    };
 
     const serviceSpy = jest.fn().mockResolvedValue([character1, character2]);
-    const {getByText} = makeCharactersScreen(serviceSpy);
+    const {getByText, getByLabelText} = makeCharactersScreen(serviceSpy);
 
     await waitFor(() => {
       expect(getByText(character1.name)).not.toBeNull();
+      const image1 = getByLabelText(character1.thumbUrl);
+      expect(image1.props.source.uri).toEqual(character1.thumbUrl);
+
       expect(getByText(character2.name)).not.toBeNull();
+      const image2 = getByLabelText(character2.thumbUrl);
+      expect(image2.props.source.uri).toEqual(character2.thumbUrl);
     });
   });
 });

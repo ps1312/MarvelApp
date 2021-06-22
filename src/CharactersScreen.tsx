@@ -1,6 +1,13 @@
 import md5 from 'md5';
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, ActivityIndicator, Button, Text, FlatList} from 'react-native';
+import {
+  View,
+  ActivityIndicator,
+  Button,
+  Text,
+  FlatList,
+  Image,
+} from 'react-native';
 import {Character} from './api';
 
 type Props = {
@@ -43,18 +50,35 @@ const CharactersScreen = ({
   }, [fetchCharacters]);
 
   return (
-    <View>
+    <View style={{width: '100%', height: '100%'}}>
       {loading ? (
         <ActivityIndicator testID={'activityIndicator'} />
       ) : error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       ) : (
-        <FlatList
-          data={characters}
-          renderItem={({item}) => <Text key={item.id}>{item.name}</Text>}
-          keyExtractor={item => `${item.id}`}
-          ListFooterComponent={<Text>Fuck</Text>}
-        />
+        <View>
+          <View
+            style={{width: '100%', height: '10%', backgroundColor: 'red'}}
+          />
+          <FlatList
+            data={characters}
+            renderItem={({item}) => (
+              <View>
+                <Image
+                  style={{width: 50, height: 50, borderRadius: 25}}
+                  source={{uri: item.thumbUrl}}
+                  accessibilityLabel={item.thumbUrl}
+                />
+                <Text key={item.id}>{item.name}</Text>
+              </View>
+            )}
+            style={{height: '80%'}}
+            keyExtractor={item => `${item.id}`}
+          />
+          <View
+            style={{width: '100%', height: '10%', backgroundColor: 'red'}}
+          />
+        </View>
       )}
     </View>
   );
