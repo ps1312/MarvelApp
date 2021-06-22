@@ -1,17 +1,27 @@
-type Hero = {};
+type Hero = {
+  id: number;
+  name: string;
+};
 
 const listHeroesService = async (url: string): Promise<Hero[]> => {
   try {
     const result = await fetch(url);
     const json = await result.json();
-    return json.data.results.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-    }));
+    return json.data.results.map((item: any) => {
+      if (!isHero(item)) {
+        throw new Error();
+      }
+
+      return {id: item.id, name: item.name};
+    });
   } catch (error) {
     throw new Error();
   }
 };
+
+function isHero(item: any): item is Hero {
+  return (item as Hero).id !== undefined;
+}
 
 describe('listHeroesService()', () => {
   test('make request with provided url', () => {
@@ -46,9 +56,17 @@ describe('listHeroesService()', () => {
     expect(result.length).toEqual(0);
   });
 
+  test('throws error when fetch returns invalid heroes', async () => {
+    const hero1 = {invalid: 'hero'};
+
+    global.fetch = mockValidFetchResponse([hero1]);
+
+    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
+  });
+
   test('returns heroes list when fetch succeeds', async () => {
-    const hero1 = {id: 1, name: 'any name'};
-    const hero2 = {id: 2, name: 'another name'};
+    const hero1: Hero = {id: 1, name: 'any name'};
+    const hero2: Hero = {id: 2, name: 'another name'};
 
     global.fetch = mockValidFetchResponse([hero1, hero2]);
 
@@ -69,7 +87,7 @@ const mockInvalidFetchResponse = () =>
     });
   });
 
-const mockValidFetchResponse = (results: Hero[] = []) =>
+const mockValidFetchResponse = (results: any[] = []) =>
   jest.fn().mockImplementationOnce(() => {
     return new Promise((resolve, _) => {
       resolve({json: () => ({data: {results}})});
