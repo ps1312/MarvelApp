@@ -42,48 +42,40 @@ describe('CharactersScreen.tsx', () => {
   });
 
   test('should display a retry button when listCharactersService fails', async () => {
-    const listCharactersService = jest.fn().mockRejectedValue(new Error());
-    const timestamp = () => 9999999999999;
-    const publicKey = 'public marvel key';
-    const privateKey = 'private marvel key';
-    const baseUrl = 'http://any-url.com/';
-
-    const {getByText} = render(
-      <CharactersScreen
-        listCharactersService={listCharactersService}
-        timestamp={timestamp}
-        publicKey={publicKey}
-        privateKey={privateKey}
-        baseUrl={baseUrl}
-      />,
-    );
+    const {getByText} = makeCharactersScreen();
 
     await waitFor(() => getByText('Tentar novamente'));
   });
 
   test('should make request when retry button is tapped', async () => {
-    const listCharactersService = jest.fn().mockRejectedValue(new Error());
-    const timestamp = () => 9999999999999;
-    const publicKey = 'public marvel key';
-    const privateKey = 'private marvel key';
-    const baseUrl = 'http://any-url.com/';
-
-    const {getByText, getByTestId} = render(
-      <CharactersScreen
-        listCharactersService={listCharactersService}
-        timestamp={timestamp}
-        publicKey={publicKey}
-        privateKey={privateKey}
-        baseUrl={baseUrl}
-      />,
-    );
+    const serviceSpy = jest.fn().mockRejectedValue(new Error());
+    const {getByText, getByTestId} = makeCharactersScreen(serviceSpy);
 
     await waitFor(() => {
       const retryButton = getByText('Tentar novamente');
       fireEvent.press(retryButton);
 
       expect(getByTestId('activityIndicator')).not.toBeNull();
-      expect(listCharactersService).toHaveBeenCalledTimes(2);
+      expect(serviceSpy).toHaveBeenCalledTimes(2);
     });
   });
 });
+
+const makeCharactersScreen = (
+  listCharactersService = jest.fn().mockRejectedValue(new Error()),
+) => {
+  const timestamp = () => 9999999999999;
+  const publicKey = 'public marvel key';
+  const privateKey = 'private marvel key';
+  const baseUrl = 'http://any-url.com/';
+
+  return render(
+    <CharactersScreen
+      listCharactersService={listCharactersService}
+      timestamp={timestamp}
+      publicKey={publicKey}
+      privateKey={privateKey}
+      baseUrl={baseUrl}
+    />,
+  );
+};
