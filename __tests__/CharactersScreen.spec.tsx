@@ -3,6 +3,7 @@ import {
   waitForElementToBeRemoved,
   render,
   waitFor,
+  fireEvent,
 } from '@testing-library/react-native';
 import md5 from 'md5';
 import CharactersScreen from '../src/CharactersScreen';
@@ -58,5 +59,31 @@ describe('CharactersScreen.tsx', () => {
     );
 
     await waitFor(() => getByText('Tentar novamente'));
+  });
+
+  test('should make request when retry button is tapped', async () => {
+    const listCharactersService = jest.fn().mockRejectedValue(new Error());
+    const timestamp = () => 9999999999999;
+    const publicKey = 'public marvel key';
+    const privateKey = 'private marvel key';
+    const baseUrl = 'http://any-url.com/';
+
+    const {getByText, getByTestId} = render(
+      <CharactersScreen
+        listCharactersService={listCharactersService}
+        timestamp={timestamp}
+        publicKey={publicKey}
+        privateKey={privateKey}
+        baseUrl={baseUrl}
+      />,
+    );
+
+    await waitFor(() => {
+      const retryButton = getByText('Tentar novamente');
+      fireEvent.press(retryButton);
+
+      expect(getByTestId('activityIndicator')).not.toBeNull();
+      expect(listCharactersService).toHaveBeenCalledTimes(2);
+    });
   });
 });

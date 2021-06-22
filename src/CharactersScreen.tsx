@@ -1,5 +1,5 @@
 import md5 from 'md5';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, ActivityIndicator, Button} from 'react-native';
 import {Character} from './api';
 
@@ -20,28 +20,29 @@ const CharactersScreen = ({
 }: Props) => {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function makeRequest() {
-      const hash = md5(timestamp() + publicKey + privateKey);
+  const fetchCharacters = useCallback(async () => {
+    setLoading(true);
+    const hash = md5(timestamp() + publicKey + privateKey);
 
-      try {
-        const queryParams = `?ts=${timestamp()}&apikey=${publicKey}&hash=${hash}`;
-        const url = baseUrl + queryParams;
-        await listCharactersService(url);
-      } catch {}
+    try {
+      const queryParams = `?ts=${timestamp()}&apikey=${publicKey}&hash=${hash}`;
+      const url = baseUrl + queryParams;
+      await listCharactersService(url);
+    } catch {}
 
-      setLoading(false);
-    }
-
-    makeRequest();
+    setLoading(false);
   }, [baseUrl, listCharactersService, privateKey, publicKey, timestamp]);
+
+  useEffect(() => {
+    fetchCharacters();
+  }, [fetchCharacters]);
 
   return (
     <View>
       {loading ? (
         <ActivityIndicator testID={'activityIndicator'} />
       ) : (
-        <Button title={'Tentar novamente'} onPress={() => {}} />
+        <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       )}
     </View>
   );
