@@ -1,6 +1,6 @@
 import md5 from 'md5';
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, ActivityIndicator, Button, Text} from 'react-native';
+import {View, ActivityIndicator, Button, Text, FlatList} from 'react-native';
 import {Character} from './api';
 
 type Props = {
@@ -49,9 +49,12 @@ const CharactersScreen = ({
       ) : error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       ) : (
-        characters.map(character => (
-          <Text key={character.id}>{character.name}</Text>
-        ))
+        <FlatList
+          data={characters}
+          renderItem={({item}) => <Text key={item.id}>{item.name}</Text>}
+          keyExtractor={item => `${item.id}`}
+          ListFooterComponent={<Text>Fuck</Text>}
+        />
       )}
     </View>
   );
