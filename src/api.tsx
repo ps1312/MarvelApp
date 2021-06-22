@@ -1,9 +1,9 @@
-const listHeroesService = async (url: string): Promise<Hero[]> => {
+const listCharactersService = async (url: string): Promise<Character[]> => {
   try {
     const result = await fetch(url);
     const json = await result.json();
     return json.data.results.map((item: any) => {
-      if (!isHero(item)) {
+      if (!isCharacter(item)) {
         throw new Error();
       }
 
@@ -14,13 +14,16 @@ const listHeroesService = async (url: string): Promise<Hero[]> => {
   }
 };
 
-function isHero(item: any): item is Hero {
-  return (item as Hero).id !== undefined && (item as Hero).name !== undefined;
+function isCharacter(item: any): item is Character {
+  return (
+    (item as Character).id !== undefined &&
+    (item as Character).name !== undefined
+  );
 }
 
-export type Hero = {
+export type Character = {
   id: number;
   name: string;
 };
 
-export default listHeroesService;
+export default listCharactersService;

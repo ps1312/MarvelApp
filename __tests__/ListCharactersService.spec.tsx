@@ -1,11 +1,11 @@
-import listHeroesService, {Hero} from '../src/api';
+import listCharactersService, {Character} from '../src/api';
 
-describe('listHeroesService()', () => {
+describe('listCharactersService()', () => {
   test('make request with provided url', () => {
     global.fetch = mockRejectedFetch();
 
     const url = 'https://any-url.com';
-    listHeroesService(url);
+    listCharactersService(url);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenLastCalledWith(url);
@@ -15,49 +15,55 @@ describe('listHeroesService()', () => {
     global.fetch = mockRejectedFetch();
 
     const url = 'https://any-url.com';
-    await expect(listHeroesService(url)).rejects.toThrow();
+    await expect(listCharactersService(url)).rejects.toThrow();
   });
 
   test('throws error when fetch returns invalid data', async () => {
     global.fetch = mockInvalidFetchResponse();
 
     const url = 'https://any-url.com';
-    await expect(listHeroesService(url)).rejects.toThrow();
+    await expect(listCharactersService(url)).rejects.toThrow();
   });
 
   test('returns empty heroes list when fetch succeeds with no heroes', async () => {
     global.fetch = mockValidFetchResponse();
 
     const url = 'https://any-url.com';
-    const result = await listHeroesService(url);
+    const result = await listCharactersService(url);
     expect(result.length).toEqual(0);
   });
 
   test('throws error when fetch returns invalid heroes', async () => {
-    const hero1 = {};
-    global.fetch = mockValidFetchResponse([hero1]);
-    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
+    const character1 = {};
+    global.fetch = mockValidFetchResponse([character1]);
+    await expect(
+      listCharactersService('https://any-url.com'),
+    ).rejects.toThrow();
 
-    const hero2 = {id: 123};
-    global.fetch = mockValidFetchResponse([hero2]);
-    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
+    const character2 = {id: 123};
+    global.fetch = mockValidFetchResponse([character2]);
+    await expect(
+      listCharactersService('https://any-url.com'),
+    ).rejects.toThrow();
 
-    const hero3 = {name: 'name'};
-    global.fetch = mockValidFetchResponse([hero3]);
-    await expect(listHeroesService('https://any-url.com')).rejects.toThrow();
+    const character3 = {name: 'name'};
+    global.fetch = mockValidFetchResponse([character3]);
+    await expect(
+      listCharactersService('https://any-url.com'),
+    ).rejects.toThrow();
   });
 
   test('returns heroes list when fetch succeeds', async () => {
-    const hero1: Hero = {id: 1, name: 'any name'};
-    const hero2: Hero = {id: 2, name: 'another name'};
+    const character1: Character = {id: 1, name: 'any name'};
+    const character2: Character = {id: 2, name: 'another name'};
 
-    global.fetch = mockValidFetchResponse([hero1, hero2]);
+    global.fetch = mockValidFetchResponse([character1, character2]);
 
     const url = 'https://any-url.com';
-    const result = await listHeroesService(url);
+    const result = await listCharactersService(url);
     expect(result.length).toEqual(2);
-    expect(result[0]).toStrictEqual(hero1);
-    expect(result[1]).toStrictEqual(hero2);
+    expect(result[0]).toStrictEqual(character1);
+    expect(result[1]).toStrictEqual(character2);
   });
 });
 
