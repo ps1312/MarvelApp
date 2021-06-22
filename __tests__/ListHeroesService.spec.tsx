@@ -1,10 +1,13 @@
 global.fetch = jest.fn();
 
-const listHeroesService = async (url: string) => {
+type Hero = {};
+
+const listHeroesService = async (url: string): Promise<Hero[]> => {
   try {
-    await fetch(url);
-    throw new Error();
-  } catch {
+    const result = await fetch(url);
+    const json = await result.json();
+    return json.data.results.map(() => ({}));
+  } catch (error) {
     throw new Error();
   }
 };
@@ -26,10 +29,26 @@ describe('listHeroesService()', () => {
   });
 
   test('throws error when fetch returns invalid data', async () => {
-    global.fetch = jest.fn().mockResolvedValueOnce('');
+    global.fetch = jest.fn().mockImplementationOnce(() => {
+      return new Promise((resolve, _) => {
+        resolve({json: () => ({invalid: 'json'})});
+      });
+    });
 
     const url = 'https://any-url.com';
     await expect(listHeroesService(url)).rejects.toThrow();
+  });
+
+  test('returns empty heroes list when fetch succeeds with no heroes', async () => {
+    global.fetch = jest.fn().mockImplementationOnce(() => {
+      return new Promise((resolve, _) => {
+        resolve({json: () => ({data: {results: []}})});
+      });
+    });
+
+    const url = 'https://any-url.com';
+    const result = await listHeroesService(url);
+    expect(result.length).toEqual(0);
   });
 });
 
