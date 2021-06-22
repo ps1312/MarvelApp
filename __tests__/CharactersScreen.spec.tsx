@@ -7,6 +7,7 @@ import {
 } from '@testing-library/react-native';
 import md5 from 'md5';
 import CharactersScreen from '../src/CharactersScreen';
+import {Character} from '../src/api';
 
 const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));
@@ -81,6 +82,19 @@ describe('CharactersScreen.tsx', () => {
 
       expect(getByTestId('activityIndicator')).not.toBeNull();
       expect(serviceSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  test('should display characters names when service succeeds', async () => {
+    const character1: Character = {id: 1, name: 'any name'};
+    const character2: Character = {id: 2, name: 'another name'};
+
+    const serviceSpy = jest.fn().mockResolvedValue([character1, character2]);
+    const {getByText} = makeCharactersScreen(serviceSpy);
+
+    await waitFor(() => {
+      expect(getByText(character1.name)).not.toBeNull();
+      expect(getByText(character2.name)).not.toBeNull();
     });
   });
 });

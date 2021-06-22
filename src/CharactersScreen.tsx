@@ -1,6 +1,6 @@
 import md5 from 'md5';
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, ActivityIndicator, Button} from 'react-native';
+import {View, ActivityIndicator, Button, Text} from 'react-native';
 import {Character} from './api';
 
 type Props = {
@@ -18,7 +18,9 @@ const CharactersScreen = ({
   privateKey,
   baseUrl,
 }: Props) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [characters, setCharacters] = useState<Character[]>([]);
 
   const fetchCharacters = useCallback(async () => {
     setLoading(true);
@@ -27,8 +29,11 @@ const CharactersScreen = ({
     try {
       const queryParams = `?ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
       const url = baseUrl + queryParams;
-      await listCharactersService(url);
-    } catch {}
+      const result = await listCharactersService(url);
+      setCharacters(result);
+    } catch {
+      setError(true);
+    }
 
     setLoading(false);
   }, [baseUrl, listCharactersService, privateKey, publicKey, timestamp]);
@@ -41,8 +46,12 @@ const CharactersScreen = ({
     <View>
       {loading ? (
         <ActivityIndicator testID={'activityIndicator'} />
-      ) : (
+      ) : error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
+      ) : (
+        characters.map(character => (
+          <Text key={character.id}>{character.name}</Text>
+        ))
       )}
     </View>
   );
