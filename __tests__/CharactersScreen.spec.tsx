@@ -24,17 +24,22 @@ describe('CharactersScreen.tsx', () => {
     await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
   });
 
-  test('calls md5 with correct params', async () => {
+  test('calls md5 when fetching for characters', async () => {
     const timestamp = () => 9999999999999;
     const publicKey = 'public marvel key';
     const privateKey = 'private marvel key';
 
-    const {getByTestId} = makeCharactersScreen();
+    const {getByText} = makeCharactersScreen();
 
     expect(md5).toHaveBeenCalledTimes(1);
     expect(md5).toHaveBeenCalledWith(timestamp() + publicKey + privateKey);
 
-    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
+    await waitFor(() => {
+      const retryButton = getByText('Tentar novamente');
+      fireEvent.press(retryButton);
+
+      expect(md5).toHaveBeenCalledTimes(2);
+    });
   });
 
   test('should make request to characters with correct url', async () => {
