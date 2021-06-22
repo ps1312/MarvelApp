@@ -1,5 +1,9 @@
 import React from 'react';
-import {waitForElementToBeRemoved, render} from '@testing-library/react-native';
+import {
+  waitForElementToBeRemoved,
+  render,
+  waitFor,
+} from '@testing-library/react-native';
 import md5 from 'md5';
 import CharactersScreen from '../src/CharactersScreen';
 
@@ -43,7 +47,7 @@ describe('CharactersScreen.tsx', () => {
     const privateKey = 'private marvel key';
     const baseUrl = 'http://any-url.com/';
 
-    const {getByTestId} = render(
+    const {getByText} = render(
       <CharactersScreen
         listCharactersService={listCharactersService}
         timestamp={timestamp}
@@ -53,6 +57,6 @@ describe('CharactersScreen.tsx', () => {
       />,
     );
 
-    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
+    await waitFor(() => getByText('Tentar novamente'));
   });
 });

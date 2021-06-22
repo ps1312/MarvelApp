@@ -41,7 +41,7 @@ const CharactersScreen = ({
       {loading ? (
         <ActivityIndicator testID={'activityIndicator'} />
       ) : (
-        <Button title={'RETRY'} onPress={() => {}} />
+        <Button title={'Tentar novamente'} onPress={() => {}} />
       )}
     </View>
   );
