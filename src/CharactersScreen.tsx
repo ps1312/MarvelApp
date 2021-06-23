@@ -11,7 +11,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import debounce from 'lodash.debounce';
-import {Character} from './api';
+import {Character, ListCharactersServiceResult} from './api';
 
 const CharactersScreen = ({
   listCharactersService,
@@ -26,6 +26,7 @@ const CharactersScreen = ({
   const [searchTerm, setSearchTerm] = useState('');
   const delayedSearch = debounce(term => setSearchTerm(term), 300);
   const [page] = useState(1);
+  const [, setTotal] = useState(0);
 
   const fetchCharacters = useCallback(async () => {
     setError(false);
@@ -38,8 +39,9 @@ const CharactersScreen = ({
         queryParams += `&nameStartsWith=${searchTerm}`;
       }
       const url = baseUrl + queryParams;
-      const result = await listCharactersService(url);
-      setCharacters(result);
+      const {items, total: apiTotal} = await listCharactersService(url);
+      setCharacters(items);
+      setTotal(apiTotal);
     } catch (e) {
       setError(true);
     }
@@ -79,13 +81,13 @@ const CharactersScreen = ({
                 <FlatList
                   data={characters}
                   renderItem={({item}) => (
-                    <View>
+                    <View key={item.id}>
                       <Image
                         style={styles.thumbnailImage}
                         source={{uri: item.thumbUrl}}
                         accessibilityLabel={item.thumbUrl}
                       />
-                      <Text key={item.id}>{item.name}</Text>
+                      <Text>{item.name}</Text>
                     </View>
                   )}
                   style={styles.flatList}
@@ -105,7 +107,7 @@ const CharactersScreen = ({
 };
 
 type Props = {
-  listCharactersService: (url: string) => Promise<Character[]>;
+  listCharactersService: (url: string) => Promise<ListCharactersServiceResult>;
   timestamp: number;
   publicKey: string;
   privateKey: string;

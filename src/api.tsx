@@ -1,8 +1,15 @@
-const listCharactersService = async (url: string): Promise<Character[]> => {
+export interface ListCharactersServiceResult {
+  items: Character[];
+  total: number;
+}
+
+const listCharactersService = async (
+  url: string,
+): Promise<ListCharactersServiceResult> => {
   try {
     const result = await fetch(url);
     const json = await result.json();
-    return json.data.results.map((item: any) => {
+    const items = json.data.results.map((item: any) => {
       if (!isApiCharacter(item)) {
         throw new Error();
       }
@@ -10,6 +17,8 @@ const listCharactersService = async (url: string): Promise<Character[]> => {
       const imagePath = `${item.thumbnail.path}/portrait_small.${item.thumbnail.extension}`;
       return {id: item.id, name: item.name, thumbUrl: imagePath};
     });
+
+    return {items, total: json.data.total};
   } catch (error) {
     throw new Error();
   }

@@ -93,9 +93,11 @@ describe('CharactersScreen.tsx', () => {
       'another-thumburl.com',
     );
 
-    const serviceSpy = jest
-      .fn()
-      .mockResolvedValue([characterModel1, characterModel2]);
+    const results = [characterModel1, characterModel2];
+    const serviceSpy = jest.fn().mockResolvedValue({
+      items: results,
+      total: results.length,
+    });
     const {getByText, getByLabelText} = makeCharactersScreen(serviceSpy);
 
     await waitFor(() => {

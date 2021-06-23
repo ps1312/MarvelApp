@@ -26,12 +26,13 @@ describe('listCharactersService()', () => {
     await expect(listCharactersService(url)).rejects.toThrow();
   });
 
-  test('returns empty heroes list when fetch succeeds with no heroes', async () => {
+  test('returns empty heroes list and 0 total when fetch succeeds with no heroes', async () => {
     global.fetch = mockValidFetchResponse();
 
     const url = 'https://any-url.com';
-    const result = await listCharactersService(url);
-    expect(result.length).toEqual(0);
+    const {items, total} = await listCharactersService(url);
+    expect(items.length).toEqual(0);
+    expect(total).toEqual(0);
   });
 
   test('throws error when fetch returns invalid heroes', async () => {
@@ -66,11 +67,11 @@ describe('listCharactersService()', () => {
     global.fetch = mockValidFetchResponse([apiCharacter1, apiCharacter2]);
 
     const url = 'https://any-url.com';
-    const result = await listCharactersService(url);
-    expect(result.length).toEqual(2);
+    const {items} = await listCharactersService(url);
+    expect(items.length).toEqual(2);
 
-    expect(result[0]).toStrictEqual(expectedCharacter1);
-    expect(result[1]).toStrictEqual(expectedCharacter2);
+    expect(items[0]).toStrictEqual(expectedCharacter1);
+    expect(items[1]).toStrictEqual(expectedCharacter2);
   });
 });
 
@@ -83,9 +84,9 @@ const mockInvalidFetchResponse = () =>
     });
   });
 
-const mockValidFetchResponse = (results: any[] = []) =>
+const mockValidFetchResponse = (results: any[] = [], total = results.length) =>
   jest.fn().mockImplementationOnce(() => {
     return new Promise((resolve, _) => {
-      resolve({json: () => ({data: {results}})});
+      resolve({json: () => ({data: {results, total}})});
     });
   });
