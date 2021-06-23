@@ -134,6 +134,20 @@ describe('CharactersScreen.tsx', () => {
 
     expect(await findByText('Nenhum personagem encontrado')).not.toBeNull();
   });
+
+  test('onPageChange makes request with updated offset', async () => {
+    const results = makeCharacterBatch();
+    const serviceSpy = jest.fn().mockResolvedValue({
+      items: results,
+      total: results.length,
+    });
+
+    const {findByText} = makeCharactersScreen(serviceSpy);
+
+    await act(async () => fireEvent.press(await findByText('3')));
+    expect(serviceSpy).toHaveBeenCalledTimes(2);
+    expect(serviceSpy.mock.calls[1][0].includes('offset=30')).toBeTruthy();
+  });
 });
 
 const makeCharactersScreen = (
@@ -153,3 +167,6 @@ const makeCharactersScreen = (
     />,
   );
 };
+
+const makeCharacterBatch = () =>
+  [...Array(60)].map((_, index) => makeCharacter(index)[1]);

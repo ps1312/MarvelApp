@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import debounce from 'lodash.debounce';
 import {Character, ListCharactersServiceResult} from './api';
+import Pagination from './Pagination';
 
 const CharactersScreen = ({
   listCharactersService,
@@ -25,8 +26,8 @@ const CharactersScreen = ({
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const delayedSearch = debounce(term => setSearchTerm(term), 300);
-  const [page] = useState(0);
-  const [, setTotal] = useState(0);
+  const [page, setPage] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const fetchCharacters = useCallback(async () => {
     setError(false);
@@ -98,7 +99,13 @@ const CharactersScreen = ({
                     <Text>Nenhum personagem encontrado</Text>
                   )}
                 />
-                <View style={styles.footerContainer} />
+                <View style={styles.footerContainer}>
+                  <Pagination
+                    total={total}
+                    current={page}
+                    onPageChange={setPage}
+                  />
+                </View>
               </>
             )}
           </View>
