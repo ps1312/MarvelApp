@@ -1,4 +1,4 @@
-import {render} from '@testing-library/react-native';
+import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
 import {View, Text, Button} from 'react-native';
 
@@ -7,8 +7,9 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 interface Props {
   current: number;
   total: number;
+  onPageChange: (page: number) => void;
 }
-const Pagination = ({total, current}: Props) => {
+const Pagination = ({total, current, onPageChange}: Props) => {
   const totalPages = Math.ceil(total / 10);
 
   const renderPages = () => {
@@ -38,7 +39,7 @@ const Pagination = ({total, current}: Props) => {
         title={'▶'}
         accessibilityLabel={'arrow-right'}
         disabled={current === totalPages}
-        onPress={() => {}}
+        onPress={() => onPageChange(current + 1)}
       />
     </View>
   );
@@ -46,18 +47,22 @@ const Pagination = ({total, current}: Props) => {
 
 describe('Pagination.tsx', () => {
   test('displays all pages numbers', () => {
-    const {getByText, rerender} = render(<Pagination current={1} total={30} />);
+    const {getByText, rerender} = render(
+      <Pagination onPageChange={_page => {}} current={1} total={30} />,
+    );
 
     expect(getByText('1')).not.toBeNull();
     expect(getByText('2')).not.toBeNull();
     expect(getByText('3')).not.toBeNull();
 
-    rerender(<Pagination current={1} total={5} />);
+    rerender(<Pagination onPageChange={_page => {}} current={1} total={5} />);
     expect(getByText('1')).not.toBeNull();
   });
 
   test('displays trailing pages as ... representation with last page on end', () => {
-    const {getByText} = render(<Pagination current={1} total={60} />);
+    const {getByText} = render(
+      <Pagination onPageChange={_page => {}} current={1} total={60} />,
+    );
 
     expect(getByText('1')).not.toBeNull();
     expect(getByText('2')).not.toBeNull();
@@ -67,7 +72,9 @@ describe('Pagination.tsx', () => {
   });
 
   test('displays prev and next page buttons', () => {
-    const {getByText} = render(<Pagination current={1} total={10} />);
+    const {getByText} = render(
+      <Pagination onPageChange={_page => {}} current={1} total={10} />,
+    );
 
     expect(getByText('◀')).not.toBeNull();
     expect(getByText('▶')).not.toBeNull();
@@ -77,6 +84,17 @@ describe('Pagination.tsx', () => {
     assertButtons({current: 1, total: 10, leftState: true, rightState: true});
     assertButtons({current: 2, total: 30, leftState: false, rightState: false});
     assertButtons({current: 3, total: 30, leftState: false, rightState: true});
+  });
+
+  test('calls onPageChange with next page when user taps on next button', () => {
+    const tapSpy = jest.fn();
+    const {getByText} = render(
+      <Pagination onPageChange={tapSpy} current={1} total={20} />,
+    );
+
+    fireEvent.press(getByText('▶'));
+    expect(tapSpy).toHaveBeenCalledTimes(1);
+    expect(tapSpy).toHaveBeenCalledWith(2);
   });
 });
 
@@ -93,7 +111,7 @@ const assertButtons = ({
   rightState,
 }: AssertButtons) => {
   const {getByLabelText} = render(
-    <Pagination current={current} total={total} />,
+    <Pagination onPageChange={_page => {}} current={current} total={total} />,
   );
 
   const leftButton =
