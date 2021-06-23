@@ -10,6 +10,15 @@ interface Props {
 }
 const Pagination = ({total, current}: Props) => {
   const totalPages = Math.ceil(total / 10);
+
+  const renderPages = () => {
+    let items = [];
+    for (let i = 0; i <= totalPages; i++) {
+      items.push(<Text key={i}>{i}</Text>);
+    }
+    return items;
+  };
+
   return (
     <View>
       <Button
@@ -18,7 +27,7 @@ const Pagination = ({total, current}: Props) => {
         disabled={current === 1}
         onPress={() => {}}
       />
-      <Text>{totalPages}</Text>
+      {renderPages()}
       <Button
         title={'▶'}
         accessibilityLabel={'arrow-right'}
@@ -30,15 +39,12 @@ const Pagination = ({total, current}: Props) => {
 };
 
 describe('Pagination.tsx', () => {
-  test('displays number of pages', () => {
-    const {getByText, rerender} = render(<Pagination current={1} total={10} />);
+  test('displays all pages numbers', () => {
+    const {getByText, rerender} = render(<Pagination current={1} total={30} />);
+
     expect(getByText('1')).not.toBeNull();
-
-    rerender(<Pagination current={1} total={20} />);
     expect(getByText('2')).not.toBeNull();
-
-    rerender(<Pagination current={1} total={14} />);
-    expect(getByText('2')).not.toBeNull();
+    expect(getByText('3')).not.toBeNull();
 
     rerender(<Pagination current={1} total={5} />);
     expect(getByText('1')).not.toBeNull();
