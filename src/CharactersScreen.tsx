@@ -88,6 +88,9 @@ const CharactersScreen = ({
                   )}
                   style={styles.flatList}
                   keyExtractor={item => `${item.id}`}
+                  ListEmptyComponent={() => (
+                    <Text>Nenhum personagem encontrado</Text>
+                  )}
                 />
                 <View style={styles.footerContainer} />
               </>

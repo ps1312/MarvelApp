@@ -123,6 +123,14 @@ describe('CharactersScreen.tsx', () => {
       });
     });
   });
+
+  test('screen displays empty state when no characters exists', async () => {
+    const serviceSpy = jest.fn().mockResolvedValue([]);
+
+    const {findByText} = makeCharactersScreen(serviceSpy);
+
+    expect(await findByText('Nenhum personagem encontrado')).not.toBeNull();
+  });
 });
 
 const makeCharactersScreen = (
