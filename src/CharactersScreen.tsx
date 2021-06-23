@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   TextInput,
+  StyleSheet,
 } from 'react-native';
 import debounce from 'lodash.debounce';
 import {Character} from './api';
@@ -64,14 +65,14 @@ const CharactersScreen = ({
   }, [fetchCharacters, searchTerm]);
 
   return (
-    <View style={{width: '100%', height: '100%'}}>
+    <View style={styles.container}>
       {loading ? (
         <ActivityIndicator testID={'activityIndicator'} />
       ) : error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       ) : (
         <View>
-          <View style={{width: '100%', height: '10%', backgroundColor: 'red'}}>
+          <View style={styles.searchBarContainer}>
             <TextInput
               placeholder={'Search for a character...'}
               onChangeText={delayedSearch}
@@ -82,23 +83,46 @@ const CharactersScreen = ({
             renderItem={({item}) => (
               <View>
                 <Image
-                  style={{width: 50, height: 50, borderRadius: 25}}
+                  style={styles.thumbnailImage}
                   source={{uri: item.thumbUrl}}
                   accessibilityLabel={item.thumbUrl}
                 />
                 <Text key={item.id}>{item.name}</Text>
               </View>
             )}
-            style={{height: '80%'}}
+            style={styles.flatList}
             keyExtractor={item => `${item.id}`}
           />
-          <View
-            style={{width: '100%', height: '10%', backgroundColor: 'red'}}
-          />
+          <View style={styles.footerContainer} />
         </View>
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+  searchBarContainer: {
+    width: '100%',
+    height: '10%',
+    backgroundColor: 'red',
+  },
+  thumbnailImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  flatList: {
+    height: '80%',
+  },
+  footerContainer: {
+    width: '100%',
+    height: '10%',
+    backgroundColor: 'red',
+  },
+});
 
 export default CharactersScreen;
