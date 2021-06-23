@@ -12,6 +12,10 @@ interface Props {
 const Pagination = ({total, current, onPageChange}: Props) => {
   const totalPages = Math.ceil(total / 10);
 
+  const PageButton = ({page}: {page: number}) => (
+    <Button title={`${page}`} onPress={() => onPageChange(page)} />
+  );
+
   const renderPages = () => {
     let items = [];
     for (let i = 1; i <= totalPages; i++) {
@@ -19,7 +23,7 @@ const Pagination = ({total, current, onPageChange}: Props) => {
         items.push(<Text key={'...'}>...</Text>);
       } else {
         if (i < 4 || i === totalPages) {
-          items.push(<Text key={i}>{i}</Text>);
+          items.push(<PageButton key={i} page={i} />);
         }
       }
     }
@@ -100,6 +104,21 @@ describe('Pagination.tsx', () => {
     fireEvent.press(getByText('◀'));
     expect(tapSpy).toHaveBeenCalledTimes(2);
     expect(tapSpy).toHaveBeenCalledWith(1);
+  });
+
+  test('calls onPageChange on page tap with correct value', () => {
+    const tapSpy = jest.fn();
+    const {getByText} = render(
+      <Pagination current={1} total={100} onPageChange={tapSpy} />,
+    );
+
+    fireEvent.press(getByText('10'));
+    expect(tapSpy).toHaveBeenCalledTimes(1);
+    expect(tapSpy).toHaveBeenCalledWith(10);
+
+    fireEvent.press(getByText('3'));
+    expect(tapSpy).toHaveBeenCalledTimes(2);
+    expect(tapSpy).toHaveBeenCalledWith(3);
   });
 });
 
