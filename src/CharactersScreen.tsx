@@ -24,13 +24,11 @@ const CharactersScreen = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const delayedSearch = debounce(term => {
-    setPage(0);
-    setSearchTerm(term);
+    setParams({searchTerm: term, page: term === '' ? 0 : params.page});
   }, 300);
-  const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
+  const [params, setParams] = useState<Params>({page: 0, searchTerm: ''});
 
   const fetchCharacters = useCallback(async () => {
     setError(false);
@@ -39,10 +37,10 @@ const CharactersScreen = ({
 
     try {
       let queryParams = `?offset=${
-        page * 10
+        params.page * 10
       }&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
-      if (searchTerm !== '') {
-        queryParams += `&nameStartsWith=${searchTerm}`;
+      if (params.searchTerm !== '') {
+        queryParams += `&nameStartsWith=${params.searchTerm}`;
       }
       const url = baseUrl + queryParams;
       const {items, total: apiTotal} = await listCharactersService(url);
@@ -54,13 +52,12 @@ const CharactersScreen = ({
 
     setLoading(false);
   }, [
-    baseUrl,
-    listCharactersService,
+    timestamp,
     privateKey,
     publicKey,
-    timestamp,
-    searchTerm,
-    page,
+    params,
+    baseUrl,
+    listCharactersService,
   ]);
 
   useEffect(() => {
@@ -105,8 +102,10 @@ const CharactersScreen = ({
                 <View style={styles.footerContainer}>
                   <Pagination
                     total={total}
-                    current={page}
-                    onPageChange={setPage}
+                    current={params.page}
+                    onPageChange={newPage =>
+                      setParams({searchTerm: params.searchTerm, page: newPage})
+                    }
                   />
                 </View>
               </>
@@ -124,6 +123,11 @@ type Props = {
   publicKey: string;
   privateKey: string;
   baseUrl: string;
+};
+
+type Params = {
+  searchTerm: string;
+  page: number;
 };
 
 const styles = StyleSheet.create({
