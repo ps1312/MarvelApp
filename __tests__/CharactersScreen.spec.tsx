@@ -60,7 +60,7 @@ describe('CharactersScreen.tsx', () => {
 
     const expectedUrl =
       baseUrl +
-      `?limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${md5MockedValue}`;
+      `?page=1&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${md5MockedValue}`;
 
     expect(serviceSpy).toHaveBeenCalledTimes(1);
     expect(serviceSpy).toHaveBeenCalledWith(expectedUrl);

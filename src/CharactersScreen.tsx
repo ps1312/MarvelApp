@@ -25,6 +25,7 @@ const CharactersScreen = ({
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const delayedSearch = debounce(term => setSearchTerm(term), 300);
+  const [page] = useState(1);
 
   const fetchCharacters = useCallback(async () => {
     setError(false);
@@ -32,7 +33,7 @@ const CharactersScreen = ({
     const hash = md5(timestamp + privateKey + publicKey);
 
     try {
-      let queryParams = `?limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
+      let queryParams = `?page=${page}&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
       if (searchTerm !== '') {
         queryParams += `&nameStartsWith=${searchTerm}`;
       }
@@ -51,11 +52,12 @@ const CharactersScreen = ({
     publicKey,
     timestamp,
     searchTerm,
+    page,
   ]);
 
   useEffect(() => {
     fetchCharacters();
-  }, [fetchCharacters, searchTerm]);
+  }, [fetchCharacters]);
 
   return (
     <View style={styles.container}>
@@ -134,7 +136,6 @@ const styles = StyleSheet.create({
   footerContainer: {
     width: '100%',
     height: '10%',
-    backgroundColor: 'gray',
   },
 });
 
