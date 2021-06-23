@@ -74,15 +74,12 @@ describe('CharactersScreen.tsx', () => {
 
   test('should make request when retry button is tapped', async () => {
     const serviceSpy = jest.fn().mockRejectedValue(new Error());
-    const {getByText, getByTestId} = makeCharactersScreen(serviceSpy);
+    const {findByText, getByTestId} = makeCharactersScreen(serviceSpy);
 
-    await waitFor(() => {
-      const retryButton = getByText('Tentar novamente');
-      fireEvent.press(retryButton);
+    fireEvent.press(await findByText('Tentar novamente'));
+    expect(getByTestId('activityIndicator')).not.toBeNull();
 
-      expect(getByTestId('activityIndicator')).not.toBeNull();
-      expect(serviceSpy).toHaveBeenCalledTimes(2);
-    });
+    await waitFor(() => expect(serviceSpy).toHaveBeenCalledTimes(2));
   });
 
   test('should display characters names and thumbnails when service succeeds', async () => {

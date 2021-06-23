@@ -13,14 +13,6 @@ import {
 import debounce from 'lodash.debounce';
 import {Character} from './api';
 
-type Props = {
-  listCharactersService: (url: string) => Promise<Character[]>;
-  timestamp: number;
-  publicKey: string;
-  privateKey: string;
-  baseUrl: string;
-};
-
 const CharactersScreen = ({
   listCharactersService,
   timestamp,
@@ -35,6 +27,7 @@ const CharactersScreen = ({
   const delayedSearch = debounce(term => setSearchTerm(term), 300);
 
   const fetchCharacters = useCallback(async () => {
+    setError(false);
     setLoading(true);
     const hash = md5(timestamp + privateKey + publicKey);
 
@@ -46,7 +39,7 @@ const CharactersScreen = ({
       const url = baseUrl + queryParams;
       const result = await listCharactersService(url);
       setCharacters(result);
-    } catch {
+    } catch (e) {
       setError(true);
     }
 
@@ -66,9 +59,7 @@ const CharactersScreen = ({
 
   return (
     <View style={styles.container}>
-      {loading ? (
-        <ActivityIndicator testID={'activityIndicator'} />
-      ) : error ? (
+      {error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       ) : (
         <View>
@@ -78,26 +69,38 @@ const CharactersScreen = ({
               onChangeText={delayedSearch}
             />
           </View>
-          <FlatList
-            data={characters}
-            renderItem={({item}) => (
-              <View>
-                <Image
-                  style={styles.thumbnailImage}
-                  source={{uri: item.thumbUrl}}
-                  accessibilityLabel={item.thumbUrl}
-                />
-                <Text key={item.id}>{item.name}</Text>
-              </View>
-            )}
-            style={styles.flatList}
-            keyExtractor={item => `${item.id}`}
-          />
+          {loading ? (
+            <ActivityIndicator testID={'activityIndicator'} />
+          ) : (
+            <FlatList
+              data={characters}
+              renderItem={({item}) => (
+                <View>
+                  <Image
+                    style={styles.thumbnailImage}
+                    source={{uri: item.thumbUrl}}
+                    accessibilityLabel={item.thumbUrl}
+                  />
+                  <Text key={item.id}>{item.name}</Text>
+                </View>
+              )}
+              style={styles.flatList}
+              keyExtractor={item => `${item.id}`}
+            />
+          )}
           <View style={styles.footerContainer} />
         </View>
       )}
     </View>
   );
+};
+
+type Props = {
+  listCharactersService: (url: string) => Promise<Character[]>;
+  timestamp: number;
+  publicKey: string;
+  privateKey: string;
+  baseUrl: string;
 };
 
 const styles = StyleSheet.create({
