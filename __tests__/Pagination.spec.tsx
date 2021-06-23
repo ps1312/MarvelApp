@@ -13,8 +13,14 @@ const Pagination = ({total, current}: Props) => {
 
   const renderPages = () => {
     let items = [];
-    for (let i = 0; i <= totalPages; i++) {
-      items.push(<Text key={i}>{i}</Text>);
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 4) {
+        items.push(<Text key={'...'}>...</Text>);
+      } else {
+        if (i < 4 || i === totalPages) {
+          items.push(<Text key={i}>{i}</Text>);
+        }
+      }
     }
     return items;
   };
@@ -48,6 +54,16 @@ describe('Pagination.tsx', () => {
 
     rerender(<Pagination current={1} total={5} />);
     expect(getByText('1')).not.toBeNull();
+  });
+
+  test('displays trailing pages as ... representation with last page on end', () => {
+    const {getByText} = render(<Pagination current={1} total={60} />);
+
+    expect(getByText('1')).not.toBeNull();
+    expect(getByText('2')).not.toBeNull();
+    expect(getByText('3')).not.toBeNull();
+    expect(getByText('...')).not.toBeNull();
+    expect(getByText('6')).not.toBeNull();
   });
 
   test('displays prev and next page buttons', () => {
