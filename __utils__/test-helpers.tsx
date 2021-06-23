@@ -1,7 +1,7 @@
 import {ApiCharacter, Character} from '../src/api';
 
 const makeCharacter = (
-  id: number = Math.floor(Math.random() * 10),
+  id: number = 1,
   name: string = 'name',
   path: string = 'any-path.com',
   extension: string = 'jpg',

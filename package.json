@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "md5": "^2.3.0",
     "react": "17.0.1",
     "react-native": "0.64.1"
@@ -20,6 +21,7 @@
     "@react-native-community/eslint-config": "^2.0.0",
     "@testing-library/react-native": "^7.2.0",
     "@types/jest": "^26.0.23",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/md5": "^2.3.0",
     "@types/react-native": "^0.64.5",
     "@types/react-test-renderer": "^16.9.2",
