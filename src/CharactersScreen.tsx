@@ -25,7 +25,7 @@ const CharactersScreen = ({
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const delayedSearch = debounce(term => setSearchTerm(term), 300);
-  const [page] = useState(1);
+  const [page] = useState(0);
   const [, setTotal] = useState(0);
 
   const fetchCharacters = useCallback(async () => {
@@ -34,7 +34,9 @@ const CharactersScreen = ({
     const hash = md5(timestamp + privateKey + publicKey);
 
     try {
-      let queryParams = `?page=${page}&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
+      let queryParams = `?offset=${
+        page * 10
+      }&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
       if (searchTerm !== '') {
         queryParams += `&nameStartsWith=${searchTerm}`;
       }
