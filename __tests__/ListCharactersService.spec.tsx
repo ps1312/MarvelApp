@@ -1,4 +1,5 @@
-import listCharactersService, {ApiCharacter, Character} from '../src/api';
+import listCharactersService from '../src/api';
+import {makeCharacter} from '../__utils__/test-helpers';
 
 describe('listCharactersService()', () => {
   test('make request with provided url', () => {
@@ -88,23 +89,3 @@ const mockValidFetchResponse = (results: any[] = []) =>
       resolve({json: () => ({data: {results}})});
     });
   });
-
-const makeCharacter = (
-  id: number = Math.floor(Math.random() * 10),
-  name: string = 'name',
-  path: string = 'any-path.com',
-  extension: string = 'jpg',
-): [ApiCharacter, Character] => {
-  const apiCharacter: ApiCharacter = {
-    id,
-    name,
-    thumbnail: {path, extension},
-  };
-  const expectedCharacter: Character = {
-    id,
-    name,
-    thumbUrl: `${path}/portrait_small.${extension}`,
-  };
-
-  return [apiCharacter, expectedCharacter];
-};

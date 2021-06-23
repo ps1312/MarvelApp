@@ -7,7 +7,7 @@ import {
 } from '@testing-library/react-native';
 import md5 from 'md5';
 import CharactersScreen from '../src/CharactersScreen';
-import {Character} from '../src/api';
+import {makeCharacter} from '../__utils__/test-helpers';
 
 const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));
@@ -86,30 +86,30 @@ describe('CharactersScreen.tsx', () => {
   });
 
   test('should display characters names and thumbnails when service succeeds', async () => {
-    const character1: Character = {
-      id: 1,
-      name: 'any name',
-      thumbUrl: 'any-thumburl.com',
-    };
-    const character2: Character = {
-      id: 2,
-      name: 'another name',
-      thumbUrl: 'another-thumburl.com',
-    };
+    const [, characterModel1] = makeCharacter();
+    const [, characterModel2] = makeCharacter(
+      2,
+      'another name',
+      'another-thumburl.com',
+    );
 
-    const serviceSpy = jest.fn().mockResolvedValue([character1, character2]);
+    const serviceSpy = jest
+      .fn()
+      .mockResolvedValue([characterModel1, characterModel2]);
     const {getByText, getByLabelText} = makeCharactersScreen(serviceSpy);
 
     await waitFor(() => {
-      expect(getByText(character1.name)).not.toBeNull();
-      const image1 = getByLabelText(character1.thumbUrl);
-      expect(image1.props.source.uri).toEqual(character1.thumbUrl);
+      expect(getByText(characterModel1.name)).not.toBeNull();
+      const image1 = getByLabelText(characterModel1.thumbUrl);
+      expect(image1.props.source.uri).toEqual(characterModel1.thumbUrl);
 
-      expect(getByText(character2.name)).not.toBeNull();
-      const image2 = getByLabelText(character2.thumbUrl);
-      expect(image2.props.source.uri).toEqual(character2.thumbUrl);
+      expect(getByText(characterModel2.name)).not.toBeNull();
+      const image2 = getByLabelText(characterModel2.thumbUrl);
+      expect(image2.props.source.uri).toEqual(characterModel2.thumbUrl);
     });
   });
+
+  test('search bar changes triggers request with search text', () => {});
 });
 
 const makeCharactersScreen = (
