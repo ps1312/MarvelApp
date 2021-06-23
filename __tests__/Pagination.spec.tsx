@@ -32,7 +32,7 @@ const Pagination = ({total, current, onPageChange}: Props) => {
         title={'◀'}
         accessibilityLabel={'arrow-left'}
         disabled={current === 1}
-        onPress={() => {}}
+        onPress={() => onPageChange(current - 1)}
       />
       {renderPages()}
       <Button
@@ -86,15 +86,20 @@ describe('Pagination.tsx', () => {
     assertButtons({current: 3, total: 30, leftState: false, rightState: true});
   });
 
-  test('calls onPageChange with next page when user taps on next button', () => {
+  test('calls onPageChange with prev and next button presses', async () => {
     const tapSpy = jest.fn();
-    const {getByText} = render(
-      <Pagination onPageChange={tapSpy} current={1} total={20} />,
+    const {getByText, rerender} = render(
+      <Pagination current={1} total={20} onPageChange={tapSpy} />,
     );
 
     fireEvent.press(getByText('▶'));
     expect(tapSpy).toHaveBeenCalledTimes(1);
     expect(tapSpy).toHaveBeenCalledWith(2);
+
+    rerender(<Pagination current={2} total={20} onPageChange={tapSpy} />);
+    fireEvent.press(getByText('◀'));
+    expect(tapSpy).toHaveBeenCalledTimes(2);
+    expect(tapSpy).toHaveBeenCalledWith(1);
   });
 });
 
