@@ -19,15 +19,28 @@ describe('Pagination.tsx', () => {
   });
 
   test('displays trailing pages as ... representation with last page on end', () => {
-    const {getByText} = render(
+    const {getByText, getAllByText} = render(
       <Pagination onPageChange={_page => {}} current={1} total={60} />,
     );
 
     expect(getByText('1')).not.toBeNull();
     expect(getByText('2')).not.toBeNull();
     expect(getByText('3')).not.toBeNull();
-    expect(getByText('...')).not.toBeNull();
+    expect(getAllByText('...').length).toEqual(2);
     expect(getByText('6')).not.toBeNull();
+  });
+
+  test('displays initial trailing pages as ... representation with first page on start', () => {
+    const {getByText, getAllByText} = render(
+      <Pagination onPageChange={_page => {}} current={3} total={80} />,
+    );
+
+    expect(getByText('1')).not.toBeNull();
+    expect(getByText('4')).not.toBeNull();
+    expect(getByText('5')).not.toBeNull();
+    expect(getByText('6')).not.toBeNull();
+    expect(getAllByText('...').length).toEqual(2);
+    expect(getByText('8')).not.toBeNull();
   });
 
   test('displays prev and next page buttons', () => {
