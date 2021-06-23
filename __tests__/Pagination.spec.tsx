@@ -52,36 +52,41 @@ describe('Pagination.tsx', () => {
   });
 
   test('prev and next buttons are disabled correctly', () => {
-    const {getByLabelText, rerender} = render(
-      <Pagination current={1} total={10} />,
-    );
-
-    expect(
-      getByLabelText('arrow-left').props.accessibilityState.disabled,
-    ).toBeTruthy();
-
-    expect(
-      getByLabelText('arrow-right').props.accessibilityState.disabled,
-    ).toBeTruthy();
-
-    rerender(<Pagination current={2} total={30} />);
-
-    expect(
-      getByLabelText('arrow-left').props.accessibilityState.disabled,
-    ).toBeFalsy();
-
-    expect(
-      getByLabelText('arrow-right').props.accessibilityState.disabled,
-    ).toBeFalsy();
-
-    rerender(<Pagination current={3} total={30} />);
-
-    expect(
-      getByLabelText('arrow-left').props.accessibilityState.disabled,
-    ).toBeFalsy();
-
-    expect(
-      getByLabelText('arrow-right').props.accessibilityState.disabled,
-    ).toBeTruthy();
+    assertButtons({current: 1, total: 10, leftState: true, rightState: true});
+    assertButtons({current: 2, total: 30, leftState: false, rightState: false});
+    assertButtons({current: 3, total: 30, leftState: false, rightState: true});
   });
 });
+
+interface AssertButtons {
+  current: number;
+  total: number;
+  leftState: boolean;
+  rightState: boolean;
+}
+const assertButtons = ({
+  current,
+  total,
+  leftState,
+  rightState,
+}: AssertButtons) => {
+  const {getByLabelText} = render(
+    <Pagination current={current} total={total} />,
+  );
+
+  const leftButton =
+    getByLabelText('arrow-left').props.accessibilityState.disabled;
+  if (leftState) {
+    expect(leftButton).toEqual(leftState);
+  } else {
+    expect(leftButton).toBeUndefined();
+  }
+
+  const rightButton =
+    getByLabelText('arrow-right').props.accessibilityState.disabled;
+  if (rightState) {
+    expect(rightButton).toEqual(rightState);
+  } else {
+    expect(rightButton).toBeUndefined();
+  }
+};
