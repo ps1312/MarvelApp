@@ -113,7 +113,7 @@ describe('CharactersScreen.tsx', () => {
     });
   });
 
-  test('search bar changes triggers request with search text', async () => {
+  test('search bar changes triggers request with search text and resets page', async () => {
     const serviceSpy = jest.fn().mockResolvedValue([]);
 
     const {getByPlaceholderText} = makeCharactersScreen(serviceSpy);
@@ -149,6 +149,26 @@ describe('CharactersScreen.tsx', () => {
     await act(async () => fireEvent.press(await findByText('3')));
     expect(serviceSpy).toHaveBeenCalledTimes(2);
     expect(serviceSpy.mock.calls[1][0].includes('offset=20')).toBeTruthy();
+  });
+
+  test('search bar changes resets page', async () => {
+    const results = makeCharacterBatch();
+    const serviceSpy = jest.fn().mockResolvedValue({
+      items: results,
+      total: results.length,
+    });
+
+    const {getByPlaceholderText} = makeCharactersScreen(serviceSpy);
+
+    fireEvent.changeText(
+      getByPlaceholderText('Search for a character...'),
+      'ir',
+    );
+
+    await waitFor(() => {
+      expect(serviceSpy).toHaveBeenCalledTimes(2);
+      expect(serviceSpy.mock.calls[1][0].includes('offset=0')).toBeTruthy();
+    });
   });
 });
 

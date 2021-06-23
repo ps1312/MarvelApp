@@ -25,7 +25,10 @@ const CharactersScreen = ({
   const [error, setError] = useState(false);
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const delayedSearch = debounce(term => setSearchTerm(term), 300);
+  const delayedSearch = debounce(term => {
+    setPage(0);
+    setSearchTerm(term);
+  }, 300);
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
 
