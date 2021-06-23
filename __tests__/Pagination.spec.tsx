@@ -1,53 +1,8 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import {View, Text, Button} from 'react-native';
+import Pagination from '../src/Pagination';
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
-
-interface Props {
-  current: number;
-  total: number;
-  onPageChange: (page: number) => void;
-}
-const Pagination = ({total, current, onPageChange}: Props) => {
-  const totalPages = Math.ceil(total / 10);
-
-  const PageButton = ({page}: {page: number}) => (
-    <Button title={`${page}`} onPress={() => onPageChange(page)} />
-  );
-
-  const renderPages = () => {
-    let items = [];
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 4) {
-        items.push(<Text key={'...'}>...</Text>);
-      } else {
-        if (i < 4 || i === totalPages) {
-          items.push(<PageButton key={i} page={i} />);
-        }
-      }
-    }
-    return items;
-  };
-
-  return (
-    <View>
-      <Button
-        title={'◀'}
-        accessibilityLabel={'arrow-left'}
-        disabled={current === 1}
-        onPress={() => onPageChange(current - 1)}
-      />
-      {renderPages()}
-      <Button
-        title={'▶'}
-        accessibilityLabel={'arrow-right'}
-        disabled={current === totalPages}
-        onPress={() => onPageChange(current + 1)}
-      />
-    </View>
-  );
-};
 
 describe('Pagination.tsx', () => {
   test('displays all pages numbers', () => {
