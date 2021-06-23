@@ -109,7 +109,21 @@ describe('CharactersScreen.tsx', () => {
     });
   });
 
-  test('search bar changes triggers request with search text', () => {});
+  test('search bar changes triggers request with search text', async () => {
+    const serviceSpy = jest.fn().mockResolvedValue([]);
+
+    const {getByTestId, getByPlaceholderText} =
+      makeCharactersScreen(serviceSpy);
+    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
+
+    const input = getByPlaceholderText('Search for a character...');
+    fireEvent.changeText(input, 'ir');
+
+    await waitFor(() => {
+      expect(serviceSpy).toHaveBeenCalledTimes(2);
+      expect(serviceSpy.mock.calls[1][0].includes('ir')).toBeTruthy();
+    });
+  });
 });
 
 const makeCharactersScreen = (
