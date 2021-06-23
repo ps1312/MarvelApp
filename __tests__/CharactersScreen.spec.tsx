@@ -13,6 +13,8 @@ import {makeCharacter} from '../__utils__/test-helpers';
 const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));
 
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+
 describe('CharactersScreen.tsx', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -146,7 +148,7 @@ describe('CharactersScreen.tsx', () => {
 
     await act(async () => fireEvent.press(await findByText('3')));
     expect(serviceSpy).toHaveBeenCalledTimes(2);
-    expect(serviceSpy.mock.calls[1][0].includes('offset=30')).toBeTruthy();
+    expect(serviceSpy.mock.calls[1][0].includes('offset=20')).toBeTruthy();
   });
 });
 

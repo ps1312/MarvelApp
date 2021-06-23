@@ -7,14 +7,14 @@ jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 describe('Pagination.tsx', () => {
   test('displays all pages numbers', () => {
     const {getByText, rerender} = render(
-      <Pagination onPageChange={_page => {}} current={1} total={30} />,
+      <Pagination onPageChange={_page => {}} current={0} total={40} />,
     );
 
     expect(getByText('1')).not.toBeNull();
     expect(getByText('2')).not.toBeNull();
     expect(getByText('3')).not.toBeNull();
 
-    rerender(<Pagination onPageChange={_page => {}} current={1} total={5} />);
+    rerender(<Pagination onPageChange={_page => {}} current={0} total={5} />);
     expect(getByText('1')).not.toBeNull();
   });
 
@@ -40,22 +40,22 @@ describe('Pagination.tsx', () => {
   });
 
   test('prev and next buttons are disabled correctly', () => {
-    assertButtons({current: 1, total: 10, leftState: true, rightState: true});
-    assertButtons({current: 2, total: 30, leftState: false, rightState: false});
-    assertButtons({current: 3, total: 30, leftState: false, rightState: true});
+    assertButtons({current: 0, total: 10, leftState: true, rightState: true});
+    assertButtons({current: 1, total: 30, leftState: false, rightState: false});
+    assertButtons({current: 2, total: 30, leftState: false, rightState: true});
   });
 
   test('calls onPageChange with prev and next button presses', async () => {
     const tapSpy = jest.fn();
     const {getByText, rerender} = render(
-      <Pagination current={1} total={20} onPageChange={tapSpy} />,
+      <Pagination current={0} total={20} onPageChange={tapSpy} />,
     );
 
     fireEvent.press(getByText('▶'));
     expect(tapSpy).toHaveBeenCalledTimes(1);
-    expect(tapSpy).toHaveBeenCalledWith(2);
+    expect(tapSpy).toHaveBeenCalledWith(1);
 
-    rerender(<Pagination current={2} total={20} onPageChange={tapSpy} />);
+    rerender(<Pagination current={1} total={20} onPageChange={tapSpy} />);
     fireEvent.press(getByText('◀'));
     expect(tapSpy).toHaveBeenCalledTimes(2);
     expect(tapSpy).toHaveBeenCalledWith(1);
@@ -64,16 +64,16 @@ describe('Pagination.tsx', () => {
   test('calls onPageChange on page tap with correct value', () => {
     const tapSpy = jest.fn();
     const {getByText} = render(
-      <Pagination current={1} total={100} onPageChange={tapSpy} />,
+      <Pagination current={0} total={100} onPageChange={tapSpy} />,
     );
 
     fireEvent.press(getByText('10'));
     expect(tapSpy).toHaveBeenCalledTimes(1);
-    expect(tapSpy).toHaveBeenCalledWith(10);
+    expect(tapSpy).toHaveBeenCalledWith(9);
 
     fireEvent.press(getByText('3'));
     expect(tapSpy).toHaveBeenCalledTimes(2);
-    expect(tapSpy).toHaveBeenCalledWith(3);
+    expect(tapSpy).toHaveBeenCalledWith(2);
   });
 });
 
