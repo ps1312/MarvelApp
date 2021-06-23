@@ -69,26 +69,30 @@ const CharactersScreen = ({
               onChangeText={delayedSearch}
             />
           </View>
-          {loading ? (
-            <ActivityIndicator testID={'activityIndicator'} />
-          ) : (
-            <FlatList
-              data={characters}
-              renderItem={({item}) => (
-                <View>
-                  <Image
-                    style={styles.thumbnailImage}
-                    source={{uri: item.thumbUrl}}
-                    accessibilityLabel={item.thumbUrl}
-                  />
-                  <Text key={item.id}>{item.name}</Text>
-                </View>
-              )}
-              style={styles.flatList}
-              keyExtractor={item => `${item.id}`}
-            />
-          )}
-          <View style={styles.footerContainer} />
+          <View style={styles.charactersListContainer}>
+            {loading ? (
+              <ActivityIndicator testID={'activityIndicator'} />
+            ) : (
+              <>
+                <FlatList
+                  data={characters}
+                  renderItem={({item}) => (
+                    <View>
+                      <Image
+                        style={styles.thumbnailImage}
+                        source={{uri: item.thumbUrl}}
+                        accessibilityLabel={item.thumbUrl}
+                      />
+                      <Text key={item.id}>{item.name}</Text>
+                    </View>
+                  )}
+                  style={styles.flatList}
+                  keyExtractor={item => `${item.id}`}
+                />
+                <View style={styles.footerContainer} />
+              </>
+            )}
+          </View>
         </View>
       )}
     </View>
@@ -111,7 +115,10 @@ const styles = StyleSheet.create({
   searchBarContainer: {
     width: '100%',
     height: '10%',
-    backgroundColor: 'red',
+  },
+  charactersListContainer: {
+    width: '100%',
+    height: '90%',
   },
   thumbnailImage: {
     width: 50,
@@ -124,7 +131,7 @@ const styles = StyleSheet.create({
   footerContainer: {
     width: '100%',
     height: '10%',
-    backgroundColor: 'red',
+    backgroundColor: 'gray',
   },
 });
 
