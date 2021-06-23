@@ -32,7 +32,7 @@ const CharactersScreen = ({
     const hash = md5(timestamp + privateKey + publicKey);
 
     try {
-      let queryParams = `?ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
+      let queryParams = `?limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
       if (searchTerm !== '') {
         queryParams += `&nameStartsWith=${searchTerm}`;
       }
