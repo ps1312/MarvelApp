@@ -26,4 +26,4 @@ disponíveis em https://developer.marvel.com/
 
 1. Testar a composição em App.tsx com testes unitários
 2. Habilitar CI com o travis
-3. Adicionar o ícone do app e a launch screen
+3. Adicionar splash screen do android
