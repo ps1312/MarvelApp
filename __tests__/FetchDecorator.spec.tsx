@@ -1,18 +1,9 @@
 import md5 from 'md5';
 import {PUBLIC_KEY, PRIVATE_KEY} from '@env';
+import decorateUrl from '../src/decorateUrl';
 
 const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));
-
-const decorateUrl = (url: string) => {
-  const timestamp = Date.now();
-
-  const hash = md5(timestamp + PRIVATE_KEY + PUBLIC_KEY);
-
-  const decoratedUrl = url + 'ts';
-  let queryParams = `?&ts=${timestamp}&apikey=${PUBLIC_KEY}&hash=${hash}`;
-  return decoratedUrl + queryParams;
-};
 
 describe('decorateUrl()', () => {
   test('calls md5 when decorating url with correct values', async () => {
