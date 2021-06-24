@@ -20,10 +20,8 @@ Para que a aplicação consiga fazer as requisições para a Marvel API,
 é necessário criar um arquivo **.env** com as _PUBLIC_KEY_ e _PRIVATE_KEY_
 disponíveis em https://developer.marvel.com/
 
----
-
 ## Próximos passos:
 
-1. Testar a composição em App.tsx com testes unitários
+1. Validar a composição em App.tsx com testes unitários
 2. Habilitar CI com o travis
 3. Adicionar splash screen do android
