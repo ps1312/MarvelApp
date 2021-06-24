@@ -1,11 +1,20 @@
 import React from 'react';
-import {render, waitFor} from '@testing-library/react-native';
+import {
+  render,
+  waitFor,
+  waitForElementToBeRemoved,
+} from '@testing-library/react-native';
 import CharacterDetailsScreen from '../../src/components/CharacterDetailsScreen';
 
 describe('CharacterDetailsScreen.tsx', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('displays a loading indicator on init', async () => {
     const {getByTestId} = makeCharacterDetailsScreen();
     expect(getByTestId('activityIndicator')).not.toBeNull();
+    await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
   });
 
   test('should make requests to events and series', async () => {
@@ -19,6 +28,12 @@ describe('CharacterDetailsScreen.tsx', () => {
       expect(eventsSpy).toHaveBeenCalledTimes(1);
       expect(eventsSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  test('should display a retry button when requests fails', async () => {
+    const {getByText} = makeCharacterDetailsScreen();
+
+    await waitFor(() => expect(getByText('Tentar novamente')).not.toBeNull());
   });
 });
 

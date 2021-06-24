@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {ActivityIndicator} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {ActivityIndicator, Button} from 'react-native';
 import {Serie} from '../services/getCharactersSeries';
 
 const CharacterDetailsScreen = ({
@@ -7,17 +7,25 @@ const CharacterDetailsScreen = ({
   getCharacterEvents,
   baseUrl,
 }: Props) => {
+  const [error, setError] = useState(false);
+
   useEffect(() => {
     async function makeRequest() {
       try {
         await getCharacterSeries(baseUrl);
         await getCharacterEvents(baseUrl);
-      } catch (e) {}
+      } catch (e) {
+        setError(true);
+      }
     }
     makeRequest();
   }, [baseUrl, getCharacterEvents, getCharacterSeries]);
 
-  return <ActivityIndicator testID={'activityIndicator'} />;
+  return error ? (
+    <Button title={'Tentar novamente'} onPress={() => {}} />
+  ) : (
+    <ActivityIndicator testID={'activityIndicator'} />
+  );
 };
 
 interface Props {
