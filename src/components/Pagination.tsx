@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 interface Props {
   current: number;
@@ -9,13 +9,23 @@ interface Props {
 const Pagination = ({total, current, onPageChange}: Props) => {
   const totalPages = Math.ceil(total / 10);
 
-  const PageButton = ({page}: {page: number}) => (
-    <Button
-      title={`${page + 1}`}
-      onPress={() => onPageChange(page)}
-      color={current === page ? 'blue' : 'red'}
-    />
-  );
+  const PageButton = ({page}: {page: number}) => {
+    const selected = current === page;
+    return (
+      <TouchableOpacity
+        onPress={() => onPageChange(page)}
+        style={[
+          selected
+            ? styles.pageItemContainerSelected
+            : styles.pageItemContainer,
+        ]}>
+        <Text
+          style={
+            selected ? styles.pageItemTextSelected : styles.pageItemText
+          }>{`${page + 1}`}</Text>
+      </TouchableOpacity>
+    );
+  };
 
   const renderPages = () => {
     let items = [];
@@ -24,7 +34,7 @@ const Pagination = ({total, current, onPageChange}: Props) => {
         items.push(<PageButton key={0} page={0} />);
 
         items.push(
-          <Text key={`${0}-trail`} style={{color: 'red'}}>
+          <Text key={`${0}-trail`} style={styles.pageItemText}>
             ...
           </Text>,
         );
@@ -36,7 +46,7 @@ const Pagination = ({total, current, onPageChange}: Props) => {
         items.push(<PageButton key={current + 2} page={current + 2} />);
 
         items.push(
-          <Text key={`${totalPages}-trail`} style={{color: 'red'}}>
+          <Text key={`${totalPages}-trail`} style={styles.pageItemText}>
             ...
           </Text>,
         );
@@ -58,21 +68,21 @@ const Pagination = ({total, current, onPageChange}: Props) => {
 
   return (
     <View style={styles.container}>
-      <Button
-        title={'◀'}
+      <TouchableOpacity
         accessibilityLabel={'arrow-left'}
         disabled={current === 0}
         onPress={() => onPageChange(current - 1)}
-        color={'red'}
-      />
+        style={styles.arrowItemContainer}>
+        <Text style={styles.arrowItemText}>{'<'}</Text>
+      </TouchableOpacity>
       {renderPages()}
-      <Button
-        title={'▶'}
+      <TouchableOpacity
         accessibilityLabel={'arrow-right'}
         disabled={current === totalPages - 1}
         onPress={() => onPageChange(current + 1)}
-        color={'red'}
-      />
+        style={styles.arrowItemContainer}>
+        <Text style={styles.arrowItemText}>{'>'}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -80,6 +90,40 @@ const Pagination = ({total, current, onPageChange}: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+  },
+  arrowItemContainer: {
+    justifyContent: 'center',
+  },
+  arrowItemText: {
+    marginHorizontal: 18,
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#D42026',
+  },
+  pageItemContainer: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#D42026',
+    marginHorizontal: 4,
+  },
+  pageItemContainerSelected: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#D42026',
+    marginHorizontal: 4,
+    backgroundColor: '#D42026',
+  },
+  pageItemText: {
+    fontSize: 18,
+    color: '#D42026',
+  },
+  pageItemTextSelected: {
+    fontSize: 18,
+    color: 'white',
   },
 });
 

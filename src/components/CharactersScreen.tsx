@@ -9,6 +9,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  PixelRatio,
 } from 'react-native';
 import debounce from 'lodash.debounce';
 import Pagination from './Pagination';
@@ -74,11 +75,14 @@ const CharactersScreen = ({
             />
           </View>
           <View style={styles.charactersListContainer}>
+            <View style={styles.tableHeaderContainer}>
+              <Text style={styles.tableHeaderTitle}>Nome</Text>
+            </View>
             {loading ? (
               <ActivityIndicator
                 size={'large'}
                 testID={'activityIndicator'}
-                color="red"
+                color={'#D42026'}
               />
             ) : (
               <>
@@ -152,9 +156,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginTop: 8,
   },
+  tableHeaderContainer: {
+    backgroundColor: '#D42026',
+    height: 48,
+    justifyContent: 'center',
+    paddingLeft: 24,
+    marginBottom: 12,
+  },
+  tableHeaderTitle: {
+    color: 'white',
+    fontSize: 16,
+  },
   charactersListContainer: {
     width: '100%',
-    height: '90%',
+    height: PixelRatio.get() <= 2 ? '78%' : '83%',
   },
   thumbnailImage: {
     width: 50,
@@ -162,11 +177,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
   flatList: {
-    height: '80%',
+    height: '100%',
   },
   footerContainer: {
     width: '100%',
-    height: '10%',
+    height: PixelRatio.get() <= 2 ? '15%' : '10%',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderTopWidth: 1.5,
+    borderColor: '#D42026',
   },
 });
 
