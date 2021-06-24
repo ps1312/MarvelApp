@@ -22,7 +22,7 @@ disponíveis em https://developer.marvel.com/
 
 ## Próximos passos:
 
-1. Testar a composição em App.tsx com testes unitários
+1. Validar a composição em App.tsx com testes unitários
 2. Habilitar CI com o travis
 3. Adicionar o ícone do app e a launch screen
 4. Corrigir os textos estáticos do app para inglês
