@@ -1,4 +1,3 @@
-import md5 from 'md5';
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
@@ -14,31 +13,23 @@ import debounce from 'lodash.debounce';
 import {Character, ListCharactersServiceResult} from './api';
 import Pagination from './Pagination';
 
-const CharactersScreen = ({
-  listCharactersService,
-  timestamp,
-  publicKey,
-  privateKey,
-  baseUrl,
-}: Props) => {
+const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [total, setTotal] = useState(0);
+  const [params, setParams] = useState<Params>({page: 0, searchTerm: ''});
+
   const delayedSearch = debounce(term => {
     setParams({searchTerm: term, page: term === '' ? 0 : params.page});
   }, 300);
-  const [total, setTotal] = useState(0);
-  const [params, setParams] = useState<Params>({page: 0, searchTerm: ''});
 
   const fetchCharacters = useCallback(async () => {
     setError(false);
     setLoading(true);
-    const hash = md5(timestamp + privateKey + publicKey);
 
     try {
-      let queryParams = `?offset=${
-        params.page * 10
-      }&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${hash}`;
+      let queryParams = `&offset=${params.page * 10}&limit=10`;
       if (params.searchTerm !== '') {
         queryParams += `&nameStartsWith=${params.searchTerm}`;
       }
@@ -51,14 +42,7 @@ const CharactersScreen = ({
     }
 
     setLoading(false);
-  }, [
-    timestamp,
-    privateKey,
-    publicKey,
-    params,
-    baseUrl,
-    listCharactersService,
-  ]);
+  }, [params, baseUrl, listCharactersService]);
 
   useEffect(() => {
     fetchCharacters();
@@ -119,9 +103,6 @@ const CharactersScreen = ({
 
 type Props = {
   listCharactersService: (url: string) => Promise<ListCharactersServiceResult>;
-  timestamp: number;
-  publicKey: string;
-  privateKey: string;
   baseUrl: string;
 };
 

@@ -6,6 +6,6 @@ export default (url: string) => {
 
   const hash = md5(timestamp + PRIVATE_KEY + PUBLIC_KEY);
 
-  let queryParams = `?&ts=${timestamp}&apikey=${PUBLIC_KEY}&hash=${hash}`;
+  let queryParams = `&ts=${timestamp}&apikey=${PUBLIC_KEY}&hash=${hash}`;
   return url + queryParams;
 };

@@ -6,7 +6,6 @@ import {
   fireEvent,
   act,
 } from '@testing-library/react-native';
-import md5 from 'md5';
 import CharactersScreen from '../src/CharactersScreen';
 import {makeCharacter} from '../__utils__/test-helpers';
 
@@ -28,41 +27,13 @@ describe('CharactersScreen.tsx', () => {
     await waitForElementToBeRemoved(() => getByTestId('activityIndicator'));
   });
 
-  test('calls md5 when fetching for characters', async () => {
-    const timestamp = 9999999999999;
-    const publicKey = 'public marvel key';
-    const privateKey = 'private marvel key';
-
-    const {getByText} = makeCharactersScreen();
-
-    expect(md5).toHaveBeenCalledTimes(1);
-    expect(md5).toHaveBeenCalledWith(timestamp + privateKey + publicKey);
-
-    await waitFor(() => {
-      const retryButton = getByText('Tentar novamente');
-      fireEvent.press(retryButton);
-
-      expect(md5).toHaveBeenCalledTimes(2);
-    });
-  });
-
   test('should make request to characters with correct url', async () => {
-    const timestamp = 111111111;
-    const publicKey = 'public marvel key';
     const baseUrl = 'http://another-url.com/';
     const serviceSpy = jest.fn().mockRejectedValue(new Error());
 
-    const {getByTestId} = makeCharactersScreen(
-      serviceSpy,
-      timestamp,
-      publicKey,
-      'private key',
-      baseUrl,
-    );
+    const {getByTestId} = makeCharactersScreen(serviceSpy, baseUrl);
 
-    const expectedUrl =
-      baseUrl +
-      `?offset=0&limit=10&ts=${timestamp}&apikey=${publicKey}&hash=${md5MockedValue}`;
+    const expectedUrl = baseUrl + '&offset=0&limit=10';
 
     expect(serviceSpy).toHaveBeenCalledTimes(1);
     expect(serviceSpy).toHaveBeenCalledWith(expectedUrl);
@@ -174,17 +145,11 @@ describe('CharactersScreen.tsx', () => {
 
 const makeCharactersScreen = (
   listCharactersService = jest.fn().mockRejectedValue(new Error()),
-  timestamp = 9999999999999,
-  publicKey = 'public marvel key',
-  privateKey = 'private marvel key',
   baseUrl = 'http://any-url.com/',
 ) => {
   return render(
     <CharactersScreen
       listCharactersService={listCharactersService}
-      timestamp={timestamp}
-      publicKey={publicKey}
-      privateKey={privateKey}
       baseUrl={baseUrl}
     />,
   );
