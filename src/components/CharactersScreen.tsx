@@ -16,6 +16,7 @@ import {
   Character,
   ListCharactersServiceResult,
 } from '../services/listCharactersService';
+import CharactersScreenHeader from './CharactersScreenHeader';
 
 const CharactersScreen = ({
   listCharactersService,
@@ -59,14 +60,17 @@ const CharactersScreen = ({
 
   return (
     <View style={styles.container}>
+      <CharactersScreenHeader />
       {error ? (
         <Button title={'Tentar novamente'} onPress={() => fetchCharacters()} />
       ) : (
         <View>
           <View style={styles.searchBarContainer}>
+            <Text style={styles.searchBarTitle}>Nome do personagem</Text>
             <TextInput
               placeholder={'Search for a character...'}
               onChangeText={delayedSearch}
+              style={styles.searchBarTextInput}
             />
           </View>
           <View style={styles.charactersListContainer}>
@@ -134,7 +138,19 @@ const styles = StyleSheet.create({
   },
   searchBarContainer: {
     width: '100%',
-    height: '10%',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+  },
+  searchBarTitle: {
+    color: '#D42026',
+    fontSize: 16,
+  },
+  searchBarTextInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    height: 40,
+    paddingHorizontal: 8,
+    marginTop: 8,
   },
   charactersListContainer: {
     width: '100%',

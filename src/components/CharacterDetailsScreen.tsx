@@ -6,8 +6,8 @@ import {
   Text,
   Image,
   StyleSheet,
-  View,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import {CharacterEvent} from '../services/getCharactersEvents';
 import {Serie} from '../services/getCharactersSeries';
@@ -62,7 +62,7 @@ const CharacterDetailsScreen = ({
   ];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={onDetailsClose}>
         <Text>Voltar</Text>
       </TouchableOpacity>
@@ -102,7 +102,7 @@ const CharacterDetailsScreen = ({
           />
         </>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
