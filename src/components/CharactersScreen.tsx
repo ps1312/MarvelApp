@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: 16,
     fontSize: 16,
+    width: '70%',
   },
   characterItemArrow: {
     fontSize: 24,

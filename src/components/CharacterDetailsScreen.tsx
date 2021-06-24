@@ -83,7 +83,7 @@ const CharacterDetailsScreen = ({
     );
   };
 
-  const renderSerie = (item: Serie | CharacterEvent) => {
+  const renderInfo = (item: Serie | CharacterEvent) => {
     return (
       <View style={styles.itemContainer}>
         <Image
@@ -150,7 +150,7 @@ const CharacterDetailsScreen = ({
               if (section.title === character?.name) {
                 return renderCharacter(character);
               }
-              return renderSerie(item);
+              return renderInfo(item);
             }}
           />
         </>
