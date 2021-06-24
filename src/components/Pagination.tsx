@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import theme from '../theme';
 
 interface Props {
   current: number;
@@ -98,14 +99,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 18,
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#D42026',
+    color: theme.primaryColor,
   },
   pageItemContainer: {
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: '#D42026',
+    borderColor: theme.primaryColor,
     marginHorizontal: 4,
   },
   pageItemContainerSelected: {
@@ -113,13 +114,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 50,
     borderWidth: 1,
-    borderColor: '#D42026',
+    borderColor: theme.primaryColor,
     marginHorizontal: 4,
-    backgroundColor: '#D42026',
+    backgroundColor: theme.primaryColor,
   },
   pageItemText: {
     fontSize: 18,
-    color: '#D42026',
+    color: theme.primaryColor,
   },
   pageItemTextSelected: {
     fontSize: 18,

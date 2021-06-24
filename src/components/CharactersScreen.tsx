@@ -18,6 +18,7 @@ import {
   ListCharactersServiceResult,
 } from '../services/listCharactersService';
 import CharactersScreenHeader from './CharactersScreenHeader';
+import theme from '../theme';
 
 const CharactersScreen = ({
   listCharactersService,
@@ -59,6 +60,29 @@ const CharactersScreen = ({
     fetchCharacters();
   }, [fetchCharacters]);
 
+  const renderItem = ({item, index}: {item: Character; index: number}) => {
+    const isLastItem = index === characters.length - 1;
+    return (
+      <TouchableOpacity
+        key={item.id}
+        onPress={() => onCharacterPress(item)}
+        style={[
+          styles.characterItemTouchable,
+          !isLastItem && styles.characterItemBorder,
+        ]}>
+        <View style={styles.characterItemContainer}>
+          <Image
+            style={styles.thumbnailImage}
+            source={{uri: item.thumbUrl}}
+            accessibilityLabel={item.thumbUrl}
+          />
+          <Text style={styles.characterItemName}>{item.name}</Text>
+        </View>
+        <Text style={styles.characterItemArrow}>{'>'}</Text>
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <CharactersScreenHeader />
@@ -82,29 +106,17 @@ const CharactersScreen = ({
               <ActivityIndicator
                 size={'large'}
                 testID={'activityIndicator'}
-                color={'#D42026'}
+                color={theme.primaryColor}
+                style={styles.loadingIndicator}
               />
             ) : (
               <>
                 <FlatList
                   data={characters}
-                  renderItem={({item}) => (
-                    <TouchableOpacity
-                      key={item.id}
-                      onPress={() => onCharacterPress(item)}>
-                      <Image
-                        style={styles.thumbnailImage}
-                        source={{uri: item.thumbUrl}}
-                        accessibilityLabel={item.thumbUrl}
-                      />
-                      <Text>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
+                  renderItem={renderItem}
                   style={styles.flatList}
                   keyExtractor={item => `${item.id}`}
-                  ListEmptyComponent={() => (
-                    <Text>Nenhum personagem encontrado</Text>
-                  )}
+                  ListEmptyComponent={<Text>Nenhum personagem encontrado</Text>}
                 />
                 <View style={styles.footerContainer}>
                   <Pagination
@@ -140,13 +152,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  loadingIndicator: {
+    marginTop: 16,
+  },
   searchBarContainer: {
     width: '100%',
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
   searchBarTitle: {
-    color: '#D42026',
+    color: theme.primaryColor,
     fontSize: 16,
   },
   searchBarTextInput: {
@@ -157,11 +172,10 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   tableHeaderContainer: {
-    backgroundColor: '#D42026',
+    backgroundColor: theme.primaryColor,
     height: 48,
     justifyContent: 'center',
     paddingLeft: 24,
-    marginBottom: 12,
   },
   tableHeaderTitle: {
     color: 'white',
@@ -186,7 +200,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1.5,
-    borderColor: '#D42026',
+    borderColor: theme.primaryColor,
+  },
+  characterItemTouchable: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingRight: 18,
+  },
+  characterItemContainer: {
+    flexDirection: 'row',
+    marginHorizontal: 12,
+    paddingVertical: 16,
+  },
+  characterItemBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: 'red',
+  },
+  characterItemName: {
+    alignSelf: 'center',
+    marginLeft: 16,
+    fontSize: 16,
+  },
+  characterItemArrow: {
+    fontSize: 24,
+    alignSelf: 'center',
+    color: 'gray',
   },
 });
 

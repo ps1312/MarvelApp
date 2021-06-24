@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, PixelRatio} from 'react-native';
+import theme from '../theme';
 
 const CharactersScreenHeader = () => {
   return (
@@ -24,15 +25,15 @@ const styles = StyleSheet.create({
   titleBold: {
     fontSize: PixelRatio.get() <= 2 ? 22 : 24,
     fontWeight: 'bold',
-    color: '#D42026',
+    color: theme.primaryColor,
   },
   titleLight: {
     fontSize: PixelRatio.get() <= 2 ? 22 : 24,
     fontWeight: '200',
-    color: '#D42026',
+    color: theme.primaryColor,
   },
   separator: {
-    borderBottomColor: '#D42026',
+    borderBottomColor: theme.primaryColor,
     borderBottomWidth: 4,
     width: 85,
     paddingTop: 8,
