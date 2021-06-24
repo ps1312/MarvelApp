@@ -69,7 +69,7 @@ describe('CharacterDetailsScreen.tsx', () => {
     );
 
     await act(async () => {
-      fireEvent.press(await findByText('Voltar'));
+      fireEvent.press(await findByText('X'));
       expect(onDetailsCloseSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -153,6 +153,7 @@ const makeCharacterDetailsScreen = (
     id: 1,
     name: 'any-name',
     thumbUrl: 'http://any-url.com',
+    description: 'any-description',
   },
   onDetailsClose = jest.fn(),
 ) => {

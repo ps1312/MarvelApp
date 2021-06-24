@@ -7,16 +7,19 @@ const makeCharacter = (
   name: string = 'name',
   path: string = 'any-path.com',
   extension: string = 'jpg',
+  description: string = 'any description',
 ): [ApiCharacter, Character] => {
   const apiCharacter: ApiCharacter = {
     id,
     name,
     thumbnail: {path, extension},
+    description,
   };
   const expectedCharacter: Character = {
     id,
     name,
     thumbUrl: `${path}/portrait_xlarge.${extension}`,
+    description,
   };
 
   return [apiCharacter, expectedCharacter];

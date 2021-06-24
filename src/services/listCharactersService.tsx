@@ -15,7 +15,12 @@ const listCharactersService = async (
       }
 
       const imagePath = `${item.thumbnail.path}/portrait_xlarge.${item.thumbnail.extension}`;
-      return {id: item.id, name: item.name, thumbUrl: imagePath};
+      return {
+        id: item.id,
+        name: item.name,
+        thumbUrl: imagePath,
+        description: item.description,
+      };
     });
 
     return {items, total: json.data.total};
@@ -41,12 +46,14 @@ export type ApiCharacter = {
   id: number;
   name: string;
   thumbnail: CharacterThumbnail;
+  description?: string;
 };
 
 export type Character = {
   id: number;
   name: string;
   thumbUrl: string;
+  description?: string;
 };
 
 export default listCharactersService;
