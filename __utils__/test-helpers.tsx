@@ -16,7 +16,7 @@ const makeCharacter = (
   const expectedCharacter: Character = {
     id,
     name,
-    thumbUrl: `${path}/portrait_small.${extension}`,
+    thumbUrl: `${path}/portrait_xlarge.${extension}`,
   };
 
   return [apiCharacter, expectedCharacter];

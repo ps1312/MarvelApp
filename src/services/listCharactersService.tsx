@@ -14,7 +14,7 @@ const listCharactersService = async (
         throw new Error();
       }
 
-      const imagePath = `${item.thumbnail.path}/portrait_small.${item.thumbnail.extension}`;
+      const imagePath = `${item.thumbnail.path}/portrait_xlarge.${item.thumbnail.extension}`;
       return {id: item.id, name: item.name, thumbUrl: imagePath};
     });
 
