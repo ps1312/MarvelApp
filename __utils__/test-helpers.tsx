@@ -1,4 +1,4 @@
-import {ApiEvent} from '../src/services/getCharactersEvents';
+import {ApiEvent, CharacterEvent} from '../src/services/getCharactersEvents';
 import {ApiSerie, Serie} from '../src/services/getCharactersSeries';
 import {ApiCharacter, Character} from '../src/services/listCharactersService';
 
@@ -59,7 +59,7 @@ const makeEvent = (
   end: string = 'any date',
   path: string = 'any-path.com',
   extension: string = 'jpg',
-): [ApiEvent, Event] => {
+): [ApiEvent, CharacterEvent] => {
   const apiEvent: ApiEvent = {
     id,
     title,
@@ -68,7 +68,7 @@ const makeEvent = (
     end,
     thumbnail: {path, extension},
   };
-  const expectedEvent: Event = {
+  const expectedEvent: CharacterEvent = {
     id,
     title,
     description,

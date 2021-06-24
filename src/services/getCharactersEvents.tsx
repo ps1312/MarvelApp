@@ -1,6 +1,6 @@
 import {CharacterThumbnail} from './listCharactersService';
 
-export default async (url: string): Promise<Event[]> => {
+export default async (url: string): Promise<CharacterEvent[]> => {
   try {
     const seriesResult = await fetch(url);
     const json = await seriesResult.json();
@@ -44,7 +44,7 @@ export type ApiEvent = {
   thumbnail: CharacterThumbnail;
 };
 
-export type Event = {
+export type CharacterEvent = {
   id: number;
   title: string;
   description?: string;

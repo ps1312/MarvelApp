@@ -53,6 +53,19 @@ describe('CharacterDetailsScreen.tsx', () => {
       expect(seriesSpy).toHaveBeenCalledTimes(2);
     });
   });
+
+  test('should display header and empty state on sections when data is empty', async () => {
+    const seriesSpy = jest.fn().mockResolvedValue([]);
+    const eventsSpy = jest.fn().mockResolvedValue([]);
+    const {getByText} = makeCharacterDetailsScreen(seriesSpy, eventsSpy);
+
+    await waitFor(() => {
+      getByText('Series');
+      getByText('Nenhuma serie encontrada');
+      getByText('Eventos');
+      getByText('Nenhum evento encontrado');
+    });
+  });
 });
 
 const makeCharacterDetailsScreen = (
