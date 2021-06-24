@@ -49,4 +49,22 @@ export type Character = {
   thumbUrl: string;
 };
 
+export type ApiSerie = {
+  id: number;
+  title: string;
+  description?: string;
+  startYear: number;
+  endYear: number;
+  thumbnail: CharacterThumbnail;
+};
+
+export type Serie = {
+  id: number;
+  title: string;
+  description?: string;
+  startYear: number;
+  endYear: number;
+  thumbUrl: string;
+};
+
 export default listCharactersService;
