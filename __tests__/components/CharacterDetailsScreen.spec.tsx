@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  act,
+  fireEvent,
   render,
   waitFor,
   waitForElementToBeRemoved,
@@ -34,6 +36,22 @@ describe('CharacterDetailsScreen.tsx', () => {
     const {getByText} = makeCharacterDetailsScreen();
 
     await waitFor(() => expect(getByText('Tentar novamente')).not.toBeNull());
+  });
+
+  test('should make request when retry button is tapped', async () => {
+    const eventsSpy = jest.fn().mockRejectedValue(new Error());
+    const seriesSpy = jest.fn().mockRejectedValue(new Error());
+
+    const {findByText, getByTestId} = makeCharacterDetailsScreen(
+      seriesSpy,
+      eventsSpy,
+    );
+
+    await act(async () => {
+      fireEvent.press(await findByText('Tentar novamente'));
+      expect(getByTestId('activityIndicator')).not.toBeNull();
+      expect(seriesSpy).toHaveBeenCalledTimes(2);
+    });
   });
 });
 
