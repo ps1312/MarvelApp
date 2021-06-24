@@ -7,6 +7,8 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react-native';
 import CharacterDetailsScreen from '../../src/components/CharacterDetailsScreen';
+import {Serie} from '../../src/services/getCharactersSeries';
+import {CharacterEvent} from '../../src/services/getCharactersEvents';
 
 describe('CharacterDetailsScreen.tsx', () => {
   afterEach(() => {
@@ -64,6 +66,33 @@ describe('CharacterDetailsScreen.tsx', () => {
       getByText('Nenhuma serie encontrada');
       getByText('Eventos');
       getByText('Nenhum evento encontrado');
+    });
+  });
+
+  test('should display correct series and events', async () => {
+    const serie: Serie = {
+      id: 1,
+      title: 'serie 1',
+      startYear: 2000,
+      endYear: 2001,
+      thumbUrl: 'http://any-url.com',
+    };
+    const seriesSpy = jest.fn().mockResolvedValue([serie]);
+    const event: CharacterEvent = {
+      id: 1,
+      title: 'event 1',
+      start: 'start',
+      end: 'end',
+      thumbUrl: 'http://any-url.com',
+    };
+    const eventsSpy = jest.fn().mockResolvedValue([event]);
+    const {getByText} = makeCharacterDetailsScreen(seriesSpy, eventsSpy);
+
+    await waitFor(() => {
+      getByText('Series');
+      getByText(serie.title);
+      getByText('Eventos');
+      getByText(event.title);
     });
   });
 });

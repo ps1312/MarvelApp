@@ -61,7 +61,9 @@ const CharacterDetailsScreen = ({
 
           return null;
         }}
-        renderItem={() => <Text>aeae</Text>}
+        renderItem={({item}) => {
+          return <Text>{item.title}</Text>;
+        }}
       />
     </>
   );
