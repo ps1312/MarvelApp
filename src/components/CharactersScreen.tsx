@@ -10,8 +10,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import debounce from 'lodash.debounce';
-import {Character, ListCharactersServiceResult} from './listCharactersService';
 import Pagination from './Pagination';
+import {
+  Character,
+  ListCharactersServiceResult,
+} from '../services/listCharactersService';
 
 const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {
   const [loading, setLoading] = useState(false);
