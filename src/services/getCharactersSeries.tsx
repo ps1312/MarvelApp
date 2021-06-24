@@ -1,4 +1,4 @@
-import {Serie, ApiSerie} from './api';
+import {CharacterThumbnail} from './listCharactersService';
 
 export default async (url: string): Promise<Serie[]> => {
   try {
@@ -34,3 +34,21 @@ function isApiSerie(item: any): item is ApiSerie {
     (item as ApiSerie).thumbnail !== undefined
   );
 }
+
+export type ApiSerie = {
+  id: number;
+  title: string;
+  description?: string;
+  startYear: number;
+  endYear: number;
+  thumbnail: CharacterThumbnail;
+};
+
+export type Serie = {
+  id: number;
+  title: string;
+  description?: string;
+  startYear: number;
+  endYear: number;
+  thumbUrl: string;
+};

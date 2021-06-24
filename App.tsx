@@ -1,8 +1,8 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet} from 'react-native';
-import listCharactersService from './src/api';
-import CharactersScreen from './src/CharactersScreen';
+import CharactersScreen from './src/components/CharactersScreen';
 import decorateUrl from './src/decorateUrl';
+import listCharactersService from './src/services/listCharactersService';
 
 const App = () => {
   const service = (url: string) => listCharactersService(decorateUrl(url));

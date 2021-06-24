@@ -1,5 +1,5 @@
-import {makeSerie} from '../__utils__/test-helpers';
-import getCharacterSeriesService from '../src/getCharactersSeries';
+import {makeSerie} from '../../__utils__/test-helpers';
+import getCharacterSeriesService from '../../src/services/getCharactersSeries';
 
 describe('getCharacterSeriesService()', () => {
   test('make request to character series', async () => {

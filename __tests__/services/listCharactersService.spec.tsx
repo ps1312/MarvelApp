@@ -1,5 +1,5 @@
-import listCharactersService from '../src/api';
-import {makeCharacter} from '../__utils__/test-helpers';
+import listCharactersService from '../../src/services/listCharactersService';
+import {makeCharacter} from '../../__utils__/test-helpers';
 
 describe('listCharactersService()', () => {
   test('make request with provided url', () => {

@@ -6,8 +6,8 @@ import {
   fireEvent,
   act,
 } from '@testing-library/react-native';
-import CharactersScreen from '../src/CharactersScreen';
-import {makeCharacter} from '../__utils__/test-helpers';
+import CharactersScreen from '../../src/components/CharactersScreen';
+import {makeCharacter} from '../../__utils__/test-helpers';
 
 const md5MockedValue = 'hashed';
 jest.mock('md5', () => jest.fn().mockReturnValue(md5MockedValue));

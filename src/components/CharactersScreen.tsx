@@ -10,7 +10,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import debounce from 'lodash.debounce';
-import {Character, ListCharactersServiceResult} from './api';
+import {Character, ListCharactersServiceResult} from './listCharactersService';
 import Pagination from './Pagination';
 
 const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {

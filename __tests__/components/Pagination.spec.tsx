@@ -1,6 +1,6 @@
 import {fireEvent, render} from '@testing-library/react-native';
 import React from 'react';
-import Pagination from '../src/Pagination';
+import Pagination from '../../src/components/Pagination';
 
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
 

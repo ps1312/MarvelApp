@@ -1,4 +1,9 @@
-import {ApiCharacter, ApiSerie, Character, Serie} from '../src/api';
+import {
+  ApiCharacter,
+  ApiSerie,
+  Character,
+  Serie,
+} from '../src/listCharactersService';
 
 const makeCharacter = (
   id: number = 1,
