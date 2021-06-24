@@ -9,6 +9,7 @@ import {
 import CharacterDetailsScreen from '../../src/components/CharacterDetailsScreen';
 import {Serie} from '../../src/services/getCharactersSeries';
 import {CharacterEvent} from '../../src/services/getCharactersEvents';
+import {Character} from '../../src/services/listCharactersService';
 
 describe('CharacterDetailsScreen.tsx', () => {
   afterEach(() => {
@@ -53,6 +54,28 @@ describe('CharacterDetailsScreen.tsx', () => {
       fireEvent.press(await findByText('Tentar novamente'));
       expect(getByTestId('activityIndicator')).not.toBeNull();
       expect(seriesSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  test('should display character data passed as props', async () => {
+    const character: Character = {
+      id: 1,
+      name: 'any-name',
+      thumbUrl: 'http://any-url.com',
+    };
+    const seriesSpy = jest.fn().mockResolvedValue([]);
+    const eventsSpy = jest.fn().mockResolvedValue([]);
+    const {getByText, getByLabelText} = makeCharacterDetailsScreen(
+      seriesSpy,
+      eventsSpy,
+      'http://any-url.com',
+      character,
+    );
+
+    await waitFor(() => {
+      getByText(character.name);
+      const image1 = getByLabelText(character.thumbUrl);
+      expect(image1.props.source.uri).toEqual(character.thumbUrl);
     });
   });
 
@@ -101,12 +124,18 @@ const makeCharacterDetailsScreen = (
   getCharacterSeries = jest.fn().mockRejectedValue(new Error()),
   getCharacterEvents = jest.fn().mockRejectedValue(new Error()),
   baseUrl = 'http://any-url.com/',
+  character: Character = {
+    id: 1,
+    name: 'any-name',
+    thumbUrl: 'http://any-url.com',
+  },
 ) => {
   return render(
     <CharacterDetailsScreen
       getCharacterEvents={getCharacterEvents}
       getCharacterSeries={getCharacterSeries}
       baseUrl={baseUrl}
+      character={character}
     />,
   );
 };

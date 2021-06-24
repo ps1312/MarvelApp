@@ -1,12 +1,20 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {ActivityIndicator, Button, SectionList, Text} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  SectionList,
+  Text,
+  Image,
+} from 'react-native';
 import {CharacterEvent} from '../services/getCharactersEvents';
 import {Serie} from '../services/getCharactersSeries';
+import {Character} from '../services/listCharactersService';
 
 const CharacterDetailsScreen = ({
   getCharacterSeries,
   getCharacterEvents,
   baseUrl,
+  character,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -32,6 +40,11 @@ const CharacterDetailsScreen = ({
   }, [fetchDetails]);
 
   const DATA = [
+    {
+      title: character?.name,
+      emptyState: '',
+      data: [character],
+    },
     {
       title: 'Series',
       emptyState: 'Nenhuma serie encontrada',
@@ -61,7 +74,16 @@ const CharacterDetailsScreen = ({
 
           return null;
         }}
-        renderItem={({item}) => {
+        renderItem={({item, section}) => {
+          if (section.title === character?.name) {
+            return (
+              <Image
+                style={{width: 40, height: 40}}
+                source={{uri: item.thumbUrl}}
+                accessibilityLabel={item.thumbUrl}
+              />
+            );
+          }
           return <Text>{item.title}</Text>;
         }}
       />
@@ -73,6 +95,7 @@ interface Props {
   getCharacterSeries: (url: string) => Promise<Serie[]>;
   getCharacterEvents: (url: string) => Promise<CharacterEvent[]>;
   baseUrl: string;
+  character?: Character;
 }
 
 export default CharacterDetailsScreen;
