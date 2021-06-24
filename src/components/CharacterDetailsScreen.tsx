@@ -75,17 +75,17 @@ const CharacterDetailsScreen = ({
 
           return null;
         }}
-        renderItem={({item, section}) => {
-          if (section.title === character?.name) {
-            return (
+        renderItem={({item}) => {
+          return (
+            <>
               <Image
                 style={styles.characterImage}
                 source={{uri: item.thumbUrl}}
                 accessibilityLabel={item.thumbUrl}
               />
-            );
-          }
-          return <Text>{item.title}</Text>;
+              <Text>{item.title}</Text>
+            </>
+          );
         }}
       />
     </>

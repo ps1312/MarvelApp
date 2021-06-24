@@ -98,7 +98,7 @@ describe('CharacterDetailsScreen.tsx', () => {
       title: 'serie 1',
       startYear: 2000,
       endYear: 2001,
-      thumbUrl: 'http://any-url.com',
+      thumbUrl: 'http://serie-url.com',
     };
     const seriesSpy = jest.fn().mockResolvedValue([serie]);
     const event: CharacterEvent = {
@@ -106,16 +106,24 @@ describe('CharacterDetailsScreen.tsx', () => {
       title: 'event 1',
       start: 'start',
       end: 'end',
-      thumbUrl: 'http://any-url.com',
+      thumbUrl: 'http://event-url.com',
     };
     const eventsSpy = jest.fn().mockResolvedValue([event]);
-    const {getByText} = makeCharacterDetailsScreen(seriesSpy, eventsSpy);
+    const {getByText, getByLabelText} = makeCharacterDetailsScreen(
+      seriesSpy,
+      eventsSpy,
+    );
 
     await waitFor(() => {
       getByText('Series');
       getByText(serie.title);
+      const serieImage = getByLabelText(serie.thumbUrl);
+      expect(serieImage.props.source.uri).toEqual(serie.thumbUrl);
+
       getByText('Eventos');
       getByText(event.title);
+      const eventImage = getByLabelText(event.thumbUrl);
+      expect(eventImage.props.source.uri).toEqual(event.thumbUrl);
     });
   });
 });
