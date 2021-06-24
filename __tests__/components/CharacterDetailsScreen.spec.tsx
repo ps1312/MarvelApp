@@ -57,6 +57,23 @@ describe('CharacterDetailsScreen.tsx', () => {
     });
   });
 
+  test('should call onDetailsClose on return button press', async () => {
+    const onDetailsCloseSpy = jest.fn();
+
+    const {findByText} = makeCharacterDetailsScreen(
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      onDetailsCloseSpy,
+    );
+
+    await act(async () => {
+      fireEvent.press(await findByText('Voltar'));
+      expect(onDetailsCloseSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
   test('should display character data passed as props', async () => {
     const character: Character = {
       id: 1,
@@ -137,6 +154,7 @@ const makeCharacterDetailsScreen = (
     name: 'any-name',
     thumbUrl: 'http://any-url.com',
   },
+  onDetailsClose = jest.fn(),
 ) => {
   return render(
     <CharacterDetailsScreen
@@ -144,6 +162,7 @@ const makeCharacterDetailsScreen = (
       getCharacterSeries={getCharacterSeries}
       baseUrl={baseUrl}
       character={character}
+      onDetailsClose={onDetailsClose}
     />,
   );
 };

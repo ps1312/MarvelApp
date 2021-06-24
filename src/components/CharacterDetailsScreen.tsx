@@ -6,6 +6,8 @@ import {
   Text,
   Image,
   StyleSheet,
+  View,
+  TouchableOpacity,
 } from 'react-native';
 import {CharacterEvent} from '../services/getCharactersEvents';
 import {Serie} from '../services/getCharactersSeries';
@@ -16,6 +18,7 @@ const CharacterDetailsScreen = ({
   getCharacterEvents,
   baseUrl,
   character,
+  onDetailsClose,
 }: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -58,37 +61,48 @@ const CharacterDetailsScreen = ({
     },
   ];
 
-  return error ? (
-    <Button title={'Tentar novamente'} onPress={() => fetchDetails()} />
-  ) : loading ? (
-    <ActivityIndicator testID={'activityIndicator'} />
-  ) : (
-    <>
-      <SectionList<any>
-        sections={DATA}
-        keyExtractor={(item, index) => item.title + index}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
-        renderSectionFooter={({section}: any) => {
-          if (section.data.length === 0) {
-            return <Text>{section.emptyState}</Text>;
-          }
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onDetailsClose}>
+        <Text>Voltar</Text>
+      </TouchableOpacity>
+      {error ? (
+        <Button title={'Tentar novamente'} onPress={() => fetchDetails()} />
+      ) : loading ? (
+        <ActivityIndicator
+          size={'large'}
+          testID={'activityIndicator'}
+          color={'red'}
+        />
+      ) : (
+        <>
+          <SectionList<any>
+            sections={DATA}
+            keyExtractor={(item, index) => item.title + index}
+            renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+            renderSectionFooter={({section}: any) => {
+              if (section.data.length === 0) {
+                return <Text>{section.emptyState}</Text>;
+              }
 
-          return null;
-        }}
-        renderItem={({item}) => {
-          return (
-            <>
-              <Image
-                style={styles.characterImage}
-                source={{uri: item.thumbUrl}}
-                accessibilityLabel={item.thumbUrl}
-              />
-              <Text>{item.title}</Text>
-            </>
-          );
-        }}
-      />
-    </>
+              return null;
+            }}
+            renderItem={({item}) => {
+              return (
+                <>
+                  <Image
+                    style={styles.characterImage}
+                    source={{uri: item.thumbUrl}}
+                    accessibilityLabel={item.thumbUrl}
+                  />
+                  <Text>{item.title}</Text>
+                </>
+              );
+            }}
+          />
+        </>
+      )}
+    </View>
   );
 };
 
@@ -97,10 +111,18 @@ interface Props {
   getCharacterEvents: (url: string) => Promise<CharacterEvent[]>;
   baseUrl: string;
   character?: Character;
+  onDetailsClose: () => void;
 }
 
 const styles = StyleSheet.create({
-  characterImage: {width: 40, height: 40},
+  container: {
+    width: '100%',
+    height: '100%',
+  },
+  characterImage: {
+    width: 40,
+    height: 40,
+  },
 });
 
 export default CharacterDetailsScreen;

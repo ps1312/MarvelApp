@@ -50,7 +50,8 @@ const CharactersScreen = ({
     }
 
     setLoading(false);
-  }, [params, baseUrl, listCharactersService]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params, baseUrl]);
 
   useEffect(() => {
     fetchCharacters();
@@ -70,7 +71,11 @@ const CharactersScreen = ({
           </View>
           <View style={styles.charactersListContainer}>
             {loading ? (
-              <ActivityIndicator testID={'activityIndicator'} />
+              <ActivityIndicator
+                size={'large'}
+                testID={'activityIndicator'}
+                color="red"
+              />
             ) : (
               <>
                 <FlatList
