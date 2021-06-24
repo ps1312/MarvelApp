@@ -1,9 +1,6 @@
-import {
-  ApiCharacter,
-  ApiSerie,
-  Character,
-  Serie,
-} from '../src/listCharactersService';
+import {ApiEvent} from '../src/services/getCharactersEvents';
+import {ApiSerie, Serie} from '../src/services/getCharactersSeries';
+import {ApiCharacter, Character} from '../src/services/listCharactersService';
 
 const makeCharacter = (
   id: number = 1,
@@ -54,4 +51,33 @@ const makeSerie = (
   return [apiSerie, expectedSerie];
 };
 
-export {makeCharacter, makeSerie};
+const makeEvent = (
+  id: number = 1,
+  title: string = 'any title',
+  description?: string,
+  start: string = 'any date',
+  end: string = 'any date',
+  path: string = 'any-path.com',
+  extension: string = 'jpg',
+): [ApiEvent, Event] => {
+  const apiEvent: ApiEvent = {
+    id,
+    title,
+    description,
+    start,
+    end,
+    thumbnail: {path, extension},
+  };
+  const expectedEvent: Event = {
+    id,
+    title,
+    description,
+    start,
+    end,
+    thumbUrl: `${path}/portrait_xlarge.${extension}`,
+  };
+
+  return [apiEvent, expectedEvent];
+};
+
+export {makeCharacter, makeSerie, makeEvent};

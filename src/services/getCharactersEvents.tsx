@@ -1,11 +1,11 @@
 import {CharacterThumbnail} from './listCharactersService';
 
-export default async (url: string): Promise<Serie[]> => {
+export default async (url: string): Promise<Event[]> => {
   try {
     const seriesResult = await fetch(url);
     const json = await seriesResult.json();
     const series = json.data.results.map((item: any) => {
-      if (!isApiSerie(item)) {
+      if (!isApiEvent(item)) {
         throw new Error();
       }
 
@@ -15,40 +15,40 @@ export default async (url: string): Promise<Serie[]> => {
         id: item.id,
         title: item.title,
         description: item.description,
-        startYear: item.startYear,
-        endYear: item.endYear,
+        start: item.start,
+        end: item.end,
         thumbUrl: imagePath,
       };
     });
 
     return series;
-  } catch {
+  } catch (e) {
     throw new Error();
   }
 };
 
-function isApiSerie(item: any): item is ApiSerie {
+function isApiEvent(item: any): item is ApiEvent {
   return (
-    (item as ApiSerie).id !== undefined &&
-    (item as ApiSerie).title !== undefined &&
-    (item as ApiSerie).thumbnail !== undefined
+    (item as ApiEvent).id !== undefined &&
+    (item as ApiEvent).title !== undefined &&
+    (item as ApiEvent).thumbnail !== undefined
   );
 }
 
-export type ApiSerie = {
+export type ApiEvent = {
   id: number;
   title: string;
   description?: string;
-  startYear: number;
-  endYear: number;
+  start: string;
+  end: string;
   thumbnail: CharacterThumbnail;
 };
 
-export type Serie = {
+export type Event = {
   id: number;
   title: string;
   description?: string;
-  startYear: number;
-  endYear: number;
+  start: string;
+  end: string;
   thumbUrl: string;
 };

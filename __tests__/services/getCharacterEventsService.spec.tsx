@@ -1,12 +1,12 @@
-import {makeSerie} from '../../__utils__/test-helpers';
-import getCharacterSeriesService from '../../src/services/getCharactersSeries';
+import {makeEvent} from '../../__utils__/test-helpers';
+import getCharacterEventsService from '../../src/services/getCharactersEvents';
 
-describe('getCharacterSeriesService()', () => {
+describe('getCharacterEventsService()', () => {
   test('make request to character series', async () => {
     global.fetch = mockValidFetchResponse();
 
     const url = 'https://any-url.com';
-    await getCharacterSeriesService(url);
+    await getCharacterEventsService(url);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(url);
@@ -16,21 +16,21 @@ describe('getCharacterSeriesService()', () => {
     global.fetch = mockRejectedFetch();
 
     const url = 'https://any-url.com';
-    await expect(getCharacterSeriesService(url)).rejects.toThrow();
+    await expect(getCharacterEventsService(url)).rejects.toThrow();
   });
 
   test('throws error when fetch returns invalid data', async () => {
     global.fetch = mockInvalidFetchResponse();
 
     const url = 'https://any-url.com';
-    await expect(getCharacterSeriesService(url)).rejects.toThrow();
+    await expect(getCharacterEventsService(url)).rejects.toThrow();
   });
 
   test('returns empty series when fetch succeeds with no data', async () => {
     global.fetch = mockValidFetchResponse();
 
     const url = 'https://any-url.com';
-    const series = await getCharacterSeriesService(url);
+    const series = await getCharacterEventsService(url);
     expect(series.length).toEqual(0);
   });
 
@@ -38,36 +38,36 @@ describe('getCharacterSeriesService()', () => {
     const serie1 = {};
     global.fetch = mockValidFetchResponse([serie1]);
     await expect(
-      getCharacterSeriesService('https://any-url.com'),
+      getCharacterEventsService('https://any-url.com'),
     ).rejects.toThrow();
 
     const serie2 = {id: 123};
     global.fetch = mockValidFetchResponse([serie2]);
     await expect(
-      getCharacterSeriesService('https://any-url.com'),
+      getCharacterEventsService('https://any-url.com'),
     ).rejects.toThrow();
 
     const serie3 = {name: 'name'};
     global.fetch = mockValidFetchResponse([serie3]);
     await expect(
-      getCharacterSeriesService('https://any-url.com'),
+      getCharacterEventsService('https://any-url.com'),
     ).rejects.toThrow();
   });
 
   test('returns series list when fetch succeeds', async () => {
-    const [apiSerie1, expectedSerie1] = makeSerie();
-    const [apiSerie2, expectedSerie2] = makeSerie(
+    const [apiSerie1, expectedSerie1] = makeEvent();
+    const [apiSerie2, expectedSerie2] = makeEvent(
       2,
       'another title',
       'description',
-      233,
-      244,
+      '233',
+      '244',
     );
 
     global.fetch = mockValidFetchResponse([apiSerie1, apiSerie2]);
 
     const url = 'https://any-url.com';
-    const series = await getCharacterSeriesService(url);
+    const series = await getCharacterEventsService(url);
     expect(series.length).toEqual(2);
 
     expect(series[0]).toStrictEqual(expectedSerie1);
