@@ -71,6 +71,14 @@ const CharacterDetailsScreen = ({
           source={{uri: item?.thumbUrl}}
           accessibilityLabel={item?.thumbUrl}
         />
+        <View style={styles.descriptionContainer}>
+          {item?.description !== '' && (
+            <>
+              <Text style={styles.descriptionTitle}>Sobre:</Text>
+              <Text style={styles.descriptionText}>{item?.description}</Text>
+            </>
+          )}
+        </View>
       </View>
     );
   };
@@ -195,11 +203,10 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     borderWidth: 2,
     borderColor: theme.primaryColor,
+    alignSelf: 'center',
   },
   characterInfoContainer: {
-    justifyContent: 'center',
-    flexDirection: 'row',
-    paddingVertical: 24,
+    marginHorizontal: 18,
   },
   characterInfoSectionHeaderContainer: {
     height: 44,
@@ -227,6 +234,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  descriptionContainer: {marginTop: 8},
+  descriptionTitle: {fontWeight: 'bold', fontSize: 16},
+  descriptionText: {marginVertical: 14},
 });
 
 export default CharacterDetailsScreen;
