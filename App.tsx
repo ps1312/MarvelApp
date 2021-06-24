@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {SafeAreaView, StyleSheet, Button} from 'react-native';
+import {SafeAreaView, StyleSheet, Button, View} from 'react-native';
 import CharacterDetailsScreen from './src/components/CharacterDetailsScreen';
 import CharactersScreen from './src/components/CharactersScreen';
 import decorateUrl from './src/decorateUrl';
@@ -16,8 +16,8 @@ const App = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {showDetails ? (
-        <>
+      {showDetails && (
+        <View style={styles.modal}>
           <Button title={'𝗫'} onPress={() => setShowDetails(false)} />
           <CharacterDetailsScreen
             getCharacterEvents={url =>
@@ -26,20 +26,20 @@ const App = () => {
             getCharacterSeries={url =>
               getCharactersSeries(decorateUrl(url + 'series?'))
             }
-            baseUrl={'https://gateway.marvel.com/v1/public/characters/1011334/'}
+            baseUrl={`https://gateway.marvel.com/v1/public/characters/${character?.id}/`}
             character={character}
           />
-        </>
-      ) : (
-        <CharactersScreen
-          listCharactersService={service}
-          baseUrl={'https://gateway.marvel.com/v1/public/characters?'}
-          onCharacterPress={character => {
-            setShowDetails(true);
-            setCharacter(character);
-          }}
-        />
+        </View>
       )}
+
+      <CharactersScreen
+        listCharactersService={service}
+        baseUrl={'https://gateway.marvel.com/v1/public/characters?'}
+        onCharacterPress={selectedCharacter => {
+          setShowDetails(true);
+          setCharacter(selectedCharacter);
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -50,6 +50,13 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modal: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: '100%',
+    height: '100%',
+    zIndex: 99,
   },
 });
 
