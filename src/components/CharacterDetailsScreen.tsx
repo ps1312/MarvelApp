@@ -5,6 +5,7 @@ import {
   SectionList,
   Text,
   Image,
+  StyleSheet,
 } from 'react-native';
 import {CharacterEvent} from '../services/getCharactersEvents';
 import {Serie} from '../services/getCharactersSeries';
@@ -78,7 +79,7 @@ const CharacterDetailsScreen = ({
           if (section.title === character?.name) {
             return (
               <Image
-                style={{width: 40, height: 40}}
+                style={styles.characterImage}
                 source={{uri: item.thumbUrl}}
                 accessibilityLabel={item.thumbUrl}
               />
@@ -97,5 +98,9 @@ interface Props {
   baseUrl: string;
   character?: Character;
 }
+
+const styles = StyleSheet.create({
+  characterImage: {width: 40, height: 40},
+});
 
 export default CharacterDetailsScreen;
