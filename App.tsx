@@ -21,6 +21,7 @@ const App = () => {
       <Modal
         isVisible={showDetails}
         useNativeDriver={true}
+        backdropTransitionOutTiming={0}
         style={styles.modal}>
         <CharacterDetailsScreen
           getCharacterEvents={url =>

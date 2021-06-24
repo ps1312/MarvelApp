@@ -83,37 +83,21 @@ const CharacterDetailsScreen = ({
     );
   };
 
-  const renderSerie = (item: Serie) => {
+  const renderSerie = (item: Serie | CharacterEvent) => {
     return (
-      <>
+      <View style={styles.itemContainer}>
         <Image
           style={styles.thumbnailImage}
           source={{uri: item.thumbUrl}}
           accessibilityLabel={item.thumbUrl}
         />
-        <Text>{item.title}</Text>
-
-        <Text>{item.description}</Text>
-        <Text>{item.startYear}</Text>
-        <Text>{item.startYear}</Text>
-      </>
-    );
-  };
-
-  const renderEvent = (item: CharacterEvent) => {
-    return (
-      <>
-        <Image
-          style={styles.thumbnailImage}
-          source={{uri: item.thumbUrl}}
-          accessibilityLabel={item.thumbUrl}
-        />
-        <Text>{item.title}</Text>
-
-        <Text>{item.description}</Text>
-        <Text>{item.start}</Text>
-        <Text>{item.end}</Text>
-      </>
+        <Text style={styles.itemText} numberOfLines={2}>
+          {item.title}
+        </Text>
+        <Text style={styles.itemDescription}>
+          {item.description ? item.description : 'Nenhuma descrição disponível'}
+        </Text>
+      </View>
     );
   };
 
@@ -153,7 +137,11 @@ const CharacterDetailsScreen = ({
             }}
             renderSectionFooter={({section}: any) => {
               if (section.data.length === 0) {
-                return <Text>{section.emptyState}</Text>;
+                return (
+                  <Text style={styles.emptyStateText}>
+                    {section.emptyState}
+                  </Text>
+                );
               }
 
               return null;
@@ -161,10 +149,8 @@ const CharacterDetailsScreen = ({
             renderItem={({item, section}) => {
               if (section.title === character?.name) {
                 return renderCharacter(character);
-              } else if (section.title === 'Series') {
-                return renderSerie(item);
               }
-              return renderEvent(item);
+              return renderSerie(item);
             }}
           />
         </>
@@ -237,6 +223,16 @@ const styles = StyleSheet.create({
   descriptionContainer: {marginTop: 8},
   descriptionTitle: {fontWeight: 'bold', fontSize: 16},
   descriptionText: {marginVertical: 14},
+  itemContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: theme.primaryColor,
+    paddingBottom: 16,
+    marginBottom: 16,
+    marginHorizontal: 18,
+  },
+  itemText: {fontWeight: 'bold', fontSize: 16, marginTop: 8},
+  itemDescription: {marginTop: 8},
+  emptyStateText: {marginLeft: 24, marginBottom: 24},
 });
 
 export default CharacterDetailsScreen;
