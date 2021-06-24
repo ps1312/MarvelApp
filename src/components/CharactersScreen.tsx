@@ -8,6 +8,7 @@ import {
   Image,
   TextInput,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import debounce from 'lodash.debounce';
 import Pagination from './Pagination';
@@ -16,7 +17,11 @@ import {
   ListCharactersServiceResult,
 } from '../services/listCharactersService';
 
-const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {
+const CharactersScreen = ({
+  listCharactersService,
+  baseUrl,
+  onCharacterPress,
+}: Props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -71,14 +76,16 @@ const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {
                 <FlatList
                   data={characters}
                   renderItem={({item}) => (
-                    <View key={item.id}>
+                    <TouchableOpacity
+                      key={item.id}
+                      onPress={() => onCharacterPress(item.id)}>
                       <Image
                         style={styles.thumbnailImage}
                         source={{uri: item.thumbUrl}}
                         accessibilityLabel={item.thumbUrl}
                       />
                       <Text>{item.name}</Text>
-                    </View>
+                    </TouchableOpacity>
                   )}
                   style={styles.flatList}
                   keyExtractor={item => `${item.id}`}
@@ -107,6 +114,7 @@ const CharactersScreen = ({listCharactersService, baseUrl}: Props) => {
 type Props = {
   listCharactersService: (url: string) => Promise<ListCharactersServiceResult>;
   baseUrl: string;
+  onCharacterPress: (id: number) => void;
 };
 
 type Params = {

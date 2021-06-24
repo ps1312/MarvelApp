@@ -141,16 +141,34 @@ describe('CharactersScreen.tsx', () => {
       expect(serviceSpy.mock.calls[1][0].includes('offset=0')).toBeTruthy();
     });
   });
+
+  test('should call onCharacterPress with character id on character tap', async () => {
+    const pressSpy = jest.fn();
+    const [, characterModel1] = makeCharacter();
+    const results = [characterModel1];
+    const serviceStub = jest.fn().mockResolvedValue({
+      items: results,
+      total: results.length,
+    });
+    const {findByText} = makeCharactersScreen(serviceStub, '', pressSpy);
+    const item = await findByText(characterModel1.name);
+    fireEvent.press(item);
+
+    expect(pressSpy).toHaveBeenCalled();
+    expect(pressSpy).toHaveBeenCalledWith(characterModel1.id);
+  });
 });
 
 const makeCharactersScreen = (
   listCharactersService = jest.fn().mockRejectedValue(new Error()),
   baseUrl = 'http://any-url.com/',
+  onCharacterPress = jest.fn(),
 ) => {
   return render(
     <CharactersScreen
       listCharactersService={listCharactersService}
       baseUrl={baseUrl}
+      onCharacterPress={onCharacterPress}
     />,
   );
 };
