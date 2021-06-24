@@ -78,7 +78,7 @@ const CharactersScreen = ({
                   renderItem={({item}) => (
                     <TouchableOpacity
                       key={item.id}
-                      onPress={() => onCharacterPress(item.id)}>
+                      onPress={() => onCharacterPress(item)}>
                       <Image
                         style={styles.thumbnailImage}
                         source={{uri: item.thumbUrl}}
@@ -114,7 +114,7 @@ const CharactersScreen = ({
 type Props = {
   listCharactersService: (url: string) => Promise<ListCharactersServiceResult>;
   baseUrl: string;
-  onCharacterPress: (id: number) => void;
+  onCharacterPress: (character: Character) => void;
 };
 
 type Params = {

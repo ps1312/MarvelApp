@@ -155,7 +155,7 @@ describe('CharactersScreen.tsx', () => {
     fireEvent.press(item);
 
     expect(pressSpy).toHaveBeenCalled();
-    expect(pressSpy).toHaveBeenCalledWith(characterModel1.id);
+    expect(pressSpy).toHaveBeenCalledWith(characterModel1);
   });
 });
 
